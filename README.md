@@ -1,17 +1,18 @@
-# Pet Food Safety Signal Explorer
+# Pet food recall explorer
 
 [![Weekly FDA data refresh](https://github.com/akwnn/pet-food-safety/actions/workflows/refresh.yml/badge.svg)](https://github.com/akwnn/pet-food-safety/actions/workflows/refresh.yml)
 
-**Live dashboard: https://akwnn.github.io/pet-food-safety/**
+Live dashboard: https://akwnn.github.io/pet-food-safety/
 
-**Which hazards keep coming back in pet food, which product formats they cluster in, and how long it takes to get from the first warning sign to a recall.**
+I built this to answer three questions pet owners can't easily answer: which pet food hazards keep coming back, which kinds of products they show up in, and how long it takes to go from the first sick pet to a recall.
 
-An interactive dashboard built on **every FDA Center for Veterinary Medicine recall of dog, cat and pet food, treats and supplements** in the FDA Enforcement Report, plus sourced first-signal-to-recall timelines for major outbreaks. The data **refreshes itself every week** through GitHub Actions.
+The dashboard covers every dog food, cat food, pet treat and pet supplement recall in FDA's Enforcement Report since 2003. A GitHub Actions job downloads new FDA data every Monday and rebuilds the page.
 
-## Live numbers
+## Current numbers
 <!-- STATS:START -->
-| Data through | **Sep 24, 2026** (auto-refreshed weekly) |
+| | |
 |---|---|
+| Data through | Sep 24, 2026 (updates every Monday) |
 | Pet food recall events | 329 (2003–2026) |
 | Recalled products (SKUs) | 1,910 |
 | Salmonella share of events | 50% |
@@ -21,64 +22,53 @@ An interactive dashboard built on **every FDA Center for Veterinary Medicine rec
 | Most recent recall event | 2026-08-28: Morasch Meats (Salmonella) |
 <!-- STATS:END -->
 
-## Key findings (Sept 2026 analysis)
-- **Salmonella, the constant hazard:** 50% of all pet food recall events (164 of 329), and 49–66% in every five-year window since 2008.
-- **Chemical hazards, rare but in bursts:** melamine (all 18 events in 2007), aflatoxin (2011 and 2020), vitamin D excess (12 of 20 events in 2018–2021).
-- **Recall size, the ingredient signature:** a melamine event averaged ~25 products vs ~4.6 for Salmonella, which is what it looks like when one contaminated ingredient flows into many brands.
-- **Listeria and aflatoxin, each tied to one format:** 16 of 19 Listeria events are raw/frozen, and 11 of 11 aflatoxin events are dry kibble.
-- **Raw food, the new front line:** raw/frozen/freeze-dried has been the largest recall format since 2018 (38% of events).
-- **Nutrient errors, mostly a cat problem:** 13 of 18 nutrient deficiency/excess events are cat foods, and 10 involve low thiamine (vitamin B1).
-- **Time to recall, set by the signal type:** a lab positive or acute linked illness led to recalls in 1–34 days. Diffuse signals took 6 months (human Salmonella cases linked in hindsight) to about 5.5 years (China jerky treats, agent never identified).
-- **Public record, much faster since 2020:** FDA's median time from recall start to classification fell from ~140 days (2012–2019) to ~32 days (2020–2026).
-- **Repeat recalls, mostly Salmonella:** 30 firm/hazard pairs recurred in separate episodes more than 90 days apart, and 19 of those were Salmonella, mostly at small raw and treat makers.
+## What I found (September 2026)
+- Salmonella caused 164 of 329 recall events (50%). Its share stayed between 49% and 66% in every five-year period since 2008.
+- Chemical hazards came in clusters. All 18 melamine recalls were in 2007, aflatoxin recalls bunched up in 2011 and 2020, and 12 of 20 vitamin D recalls came between 2018 and 2021.
+- A melamine recall covered about 25 products on average, compared with 4.6 for Salmonella, because one contaminated ingredient went into many brands.
+- 16 of 19 Listeria recalls were raw or frozen food. All 11 aflatoxin recalls were dry kibble.
+- Raw, frozen and freeze-dried food has been the most-recalled product type since 2018 (38% of events).
+- 13 of 18 vitamin and mineral recalls were cat food. 10 were for low thiamine (vitamin B1), and 9 of those were cat food.
+- In the 9 outbreaks where I found dates, recalls came 1 to 34 days after a positive lab test or an obvious poisoning. When the first signs were scattered complaints, it took from 181 days (Salmonella in people, linked to the food later) to about 5.5 years (jerky treats from China, cause never found).
+- FDA's median time to classify a recall after a company starts it fell from about 140 days (2012–2019) to about 32 days (2020–2026).
+- 30 companies recalled products for the same hazard again at least 90 days after an earlier recall. 19 of those repeats were Salmonella, mostly at small raw food and treat makers.
 
-## What's in the dashboard
-- **Recall trend, header sparkline:** events per year with the melamine, jerky-residue and vitamin D spikes labeled.
-- **Q1 recurring hazards, four views:** stacked yearly bars, a chronic-vs-burst bubble chart, Salmonella share by era, and a scorecard with per-hazard timelines.
-- **Q2 clusters, four views:** hazard × format heatmap, format mix over time, species by hazard, and recall severity by format.
-- **Q3 time to recall, four views:** sourced outbreak timelines (log scale), FDA classification lag by year and by hazard, and a before/after-2020 lag distribution.
-- **Q4 repeat recalls, three views:** repeat-episode timeline by firm, a US tile map of recalling firms, and top firms by hazard.
-- **Explorer, every recall:** search and filter all 329 events, then click a row for the products and FDA's stated reason.
+The page has a section for each question, a list of the newest recalls, and a searchable table of every recall event. Click a row to see the products and FDA's stated reason.
 
-## Why not openFDA adverse events?
-openFDA's `animalandveterinary/event` endpoint (1.36M reports) covers **animal drugs only**, and brand names are masked as "MSK". It contains no pet food complaints. Pet food complaints go to FDA's Safety Reporting Portal, which isn't published as bulk data. openFDA's `food/enforcement` endpoint also leaves out the Veterinary product type (only ~100 pet items appear there, misfiled under Food). So this project:
-- uses the **FDA Enforcement Report (iRES)**, product type *Veterinary*, for recalls, and
-- builds the first-signal-to-recall lens from **FDA investigation pages, FDA warning letters and CDC outbreak reports** (`data/outbreak_timelines.json`, each with a source URL).
+## Why this doesn't use openFDA adverse event reports
+I started with openFDA's animal adverse event data (1.36 million reports), but it only covers animal drugs, and brand names are hidden as "MSK". Pet food complaints go to FDA's Safety Reporting Portal, which isn't published in bulk. openFDA's recall endpoint also skips the Veterinary product type, so only about 100 pet recalls show up there.
 
-Measuring that gap is part of the finding: for several major recalls (Hill's 2019 vitamin D, the 2018 vitamin D dry foods, the 2017–18 thyroid hormone recalls), firms say they acted on "complaints" but no public record gives the complaint dates.
+So I used the FDA Enforcement Report for recalls. For the first-sign-to-recall timelines, I took dates from FDA investigation pages, FDA warning letters and CDC outbreak reports, with a source link for each in `data/outbreak_timelines.json`. For some big recalls (Hill's 2019 vitamin D, the 2018 vitamin D dry foods, the 2017–18 thyroid hormone recalls), the companies said they acted on complaints, but I couldn't find a public record of when those complaints came in.
 
-## How it stays current
-- **Download, no API key:** `scripts/fetch_fda.py` requests the Enforcement Report's public CSV export for product type *Veterinary*. Any date range that hits FDA's 1,000-row export cap is split in half automatically.
-- **Schedule, every Monday:** `.github/workflows/refresh.yml` runs the download and `scripts/pipeline.py` on GitHub Actions, then commits only if the recall data actually changed.
-- **Publishing, GitHub Pages:** each commit republishes the dashboard, so the live link always shows the latest data.
-- **Freshness, shown on the page:** the "data through" date is calculated from the newest date in FDA's records, not typed by hand.
-- **Manual refresh, one command:** `python3 scripts/fetch_fda.py && python3 scripts/pipeline.py` (add `--full` to re-download all history).
+## How the data updates
+`scripts/fetch_fda.py` downloads the Enforcement Report's public CSV export, which doesn't need an API key. FDA caps each export at 1,000 rows, so the script splits any date range that hits the cap. Every Monday, `.github/workflows/refresh.yml` runs the download and `scripts/pipeline.py`, and commits only if FDA's data changed. GitHub Pages republishes the dashboard after each commit. The "data through" date on the page is the newest date in FDA's records.
 
-## Repo layout
-```
-index.html                      self-contained dashboard (open in any browser)
-data/raw/*.csv                  FDA Enforcement Report exports (Veterinary), by year + pet keyword × recall class
-data/recalled_products.csv      1,910 pet products with hazard / format / species labels
-data/recall_events.csv          329 recall events (grouped by FDA event ID) with FDA classification lag
-data/outbreak_timelines.json    sourced first-signal -> recall timelines
-scripts/fetch_fda.py            downloads FDA Enforcement Report exports (weekly, no API key)
-scripts/pipeline.py             raw CSVs -> filtered, classified data -> index.html + README stats
-.github/workflows/refresh.yml   weekly GitHub Actions refresh
-scripts/classify.py             hazard / format / species keyword rules
-scripts/template.html           dashboard template (vanilla JS + SVG, no dependencies)
-```
-
-## Reproduce
+To refresh by hand (Python 3.9+, standard library only):
 ```bash
-python3 scripts/fetch_fda.py --full   # download every FDA veterinary recall slice (about 5 minutes)
-python3 scripts/pipeline.py           # rebuild the data files, dashboard and README stats
+python3 scripts/fetch_fda.py          # last 3 years
+python3 scripts/fetch_fda.py --full   # all history, about 5 minutes
+python3 scripts/pipeline.py           # rebuild the data files, dashboard and the numbers above
 ```
-Python 3.9+, standard library only. Records classified before June 2012 have no classification date, so they're pulled by product-description keyword × recall class.
+
+## Files
+```
+index.html                      the dashboard (one file, opens in any browser)
+data/raw/*.csv                  FDA Enforcement Report exports, product type Veterinary
+data/recalled_products.csv      every recalled pet product, with hazard, product type and species labels
+data/recall_events.csv          products grouped into recall events by FDA event ID
+data/outbreak_timelines.json    first-sign-to-recall dates for 9 outbreaks, with sources
+scripts/fetch_fda.py            downloads the FDA exports
+scripts/pipeline.py             builds the data files, dashboard and README numbers
+scripts/classify.py             keyword rules for hazard, product type and species
+scripts/template.html           dashboard template (plain JavaScript and SVG)
+.github/workflows/refresh.yml   the Monday refresh job
+```
 
 ## Methods and limits
-- **Pet filter, keyword-based:** keeps records mentioning pet terms. Drops veterinary drugs and devices (NDC, tablets, injectables, test kits, sterility or potency issues) and livestock feed.
-- **Hazard, format and species, rule-based labels:** hazard uses ordered keyword rules on FDA's "reason for recall" text. Format and species use keyword rules on the product description. Event labels are the most common label across the event's products. The rules are transparent but imperfect, so spot-check before quoting exact counts.
-- **FDA classification lag, defined:** Center Classification Date − Recall Initiation Date (earliest per event).
-- **Recall counts, detection not incidence:** they reflect detection and enforcement effort, not true contamination rates. For example, FDA's targeted raw pet food sampling in the 2010s raised raw-food recall counts. Market withdrawals and non-US recalls aren't included.
+- I kept records that mention dogs, cats, pets, puppies, kittens, treats or chews, and dropped animal drugs, vet devices and livestock feed.
+- Hazard labels come from keyword rules on FDA's "reason for recall" text. Product type and species come from the product description. Each recall event gets the most common label among its products. The rules miss some cases, so check the records before quoting an exact count.
+- FDA classification lag is the Center Classification Date minus the Recall Initiation Date, using the earliest dates in each event.
+- Records classified before June 2012 have no classification date, so the script finds them by searching product descriptions for pet keywords.
+- Recall counts measure what got caught, not how often contamination happens. FDA's targeted sampling of raw pet food in the 2010s, for example, raised raw food recall counts. Market withdrawals and recalls outside the US aren't included.
 
-*Data: U.S. FDA Enforcement Report, FDA CVM, CDC. Public and unvalidated. Not affiliated with FDA or any pet food company.*
+Data from the U.S. FDA Enforcement Report, FDA CVM and CDC. Not affiliated with FDA or any pet food company.
