@@ -99,7 +99,8 @@ if os.path.exists(readme):
         newest = max((e for e in events if e["init"]), key=lambda e: e["init"])
         in365 = sum(1 for e in events if e["init"] and (latest_seen - dt.date.fromisoformat(e["init"])).days <= 365)
         block = "\n".join([a,
-            f"| Data through | **{meta['data_through_label']}** (auto-refreshed weekly) |", "|---|---|",
+            "| | |", "|---|---|",
+            f"| Data through | {meta['data_through_label']} (updates every Monday) |",
             f"| Pet food recall events | {len(events):,} ({min(yrs)}\u2013{max(yrs)}) |",
             f"| Recalled products (SKUs) | {len(recs):,} |",
             f"| Salmonella share of events | {round(100*sal/len(events))}% |",

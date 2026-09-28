@@ -84,9 +84,9 @@ code{background:#eef1f5;padding:1px 5px;border-radius:4px;font-size:12.5px}
 <body>
 <header>
  <div class="wrap">
-  <div class="eyebrow">Pet food quality &amp; food safety · public-data project</div>
+  <div class="eyebrow">Pet food recalls · FDA data</div>
   <h1>Which hazards keep coming back in pet food, and how long do recalls take?</h1>
-  <p class="dek">An explorer built on every FDA Center for Veterinary Medicine recall of dog, cat and pet food, treats and supplements in the FDA Enforcement Report, paired with documented outbreak timelines from FDA investigations.</p>
+  <p class="dek">Every dog food, cat food, pet treat and pet supplement recall in FDA's Enforcement Report since 2003, plus dated timelines for nine outbreaks from FDA and CDC records.</p>
   <div class="prov" id="prov"></div>
   <div class="live" id="live"><span class="dot"></span><span id="liveTxt"></span></div>
   <div class="kpis" id="kpis"></div>
@@ -102,7 +102,7 @@ code{background:#eef1f5;padding:1px 5px;border-radius:4px;font-size:12.5px}
 <section id="latest">
  <div class="q">Updated weekly</div>
  <h2>Latest pet food recalls</h2>
- <p class="lede">The newest recall events in FDA's Enforcement Report, refreshed automatically every week. Click a card to open it in the explorer.</p>
+ <p class="lede">The six newest recall events in FDA's Enforcement Report. This page downloads new FDA data every Monday. Click a card to open it in the table at the bottom.</p>
  <div class="newstats" id="newstats"></div>
  <div class="latest" id="latestCards"></div>
 </section>
@@ -110,7 +110,7 @@ code{background:#eef1f5;padding:1px 5px;border-radius:4px;font-size:12.5px}
 <section id="recur">
  <div class="q">Question 1</div>
  <h2>Which hazards recur?</h2>
- <p class="lede">Each bar counts <b>recall events</b> (one FDA event can cover dozens of SKUs) by the year the firm started the recall. Click a hazard to hide or show it.</p>
+ <p class="lede">Each bar counts recall events by the year the company started the recall. One event can cover dozens of products. Click a hazard to hide or show it.</p>
  <div class="finding" id="f-recur"></div>
  <div class="card">
   <div class="chips" id="hzChips"></div>
@@ -129,9 +129,9 @@ code{background:#eef1f5;padding:1px 5px;border-radius:4px;font-size:12.5px}
   </div>
  </div>
  <div class="card">
-  <h3 style="margin:0 0 8px;font-family:var(--serif);font-weight:500">Hazard recurrence scorecard</h3>
+  <h3 style="margin:0 0 8px;font-family:var(--serif);font-weight:500">Every hazard, by number of recall events</h3>
   <div id="recurTable"></div>
-  <p class="small" style="margin-top:8px">"Active years" = distinct calendar years with at least one recall event for that hazard. "Repeat firms" = firms with 2+ separate recall events for the same hazard.</p>
+  <p class="small" style="margin-top:8px">"Active years" = distinct calendar years with at least one recall event for that hazard. "Repeat firms" = companies with 2 or more recall events for that hazard.</p>
  </div>
 </section>
 
@@ -155,7 +155,7 @@ code{background:#eef1f5;padding:1px 5px;border-radius:4px;font-size:12.5px}
    <div id="speciesChart"></div>
   </div>
   <div class="card">
-   <h3 class="ct">How serious the recalls are, by format</h3>
+   <h3 class="ct">Recall severity by product type</h3>
    <p class="small" style="margin:0 0 6px">FDA recall class: I = reasonable probability of serious harm or death; II = temporary or reversible harm; III = unlikely to cause harm</p>
    <div id="severity"></div>
   </div>
@@ -165,7 +165,7 @@ code{background:#eef1f5;padding:1px 5px;border-radius:4px;font-size:12.5px}
 <section id="time">
  <div class="q">Question 3</div>
  <h2>How long between the first warning sign and a recall?</h2>
- <p class="lede">Two lenses. <b>(a)</b> For major outbreaks, the documented date of the first complaint, illness report or positive test versus the first recall, taken from FDA investigation pages, warning letters and CDC. <b>(b)</b> For every recall, how long FDA took to formally classify it after the firm started it, which is when it appears in the public Enforcement Report.</p>
+ <p class="lede">Chart (a) covers nine outbreaks where FDA or CDC records give a date for the first complaint, illness or positive test, and measures from that date to the first recall. Charts (b) cover every recall and measure how long FDA took to classify it after the company started it. A recall shows up in FDA's public Enforcement Report once it's classified.</p>
  <div class="finding" id="f-time"></div>
  <div class="card">
   <h3 style="margin:0 0 4px;font-family:var(--serif);font-weight:500">(a) First signal → first recall, documented outbreaks</h3>
@@ -193,7 +193,7 @@ code{background:#eef1f5;padding:1px 5px;border-radius:4px;font-size:12.5px}
 <section id="repeat">
  <div class="q">Question 4</div>
  <h2>Who recalls for the same hazard more than once?</h2>
- <p class="lede">Firms that recalled for the same hazard in two or more separate episodes. From a supplier-assurance point of view this is the most useful list: a repeat is a sign the root cause was never fixed.</p>
+ <p class="lede">Companies that recalled products for the same hazard in two or more episodes at least 90 days apart. A second recall for the same hazard often means the first fix didn't reach the cause.</p>
  <div class="finding" id="f-repeat"></div>
  <div class="card"><div id="repeatChart"></div></div>
  <div class="grid2b">
@@ -204,7 +204,7 @@ code{background:#eef1f5;padding:1px 5px;border-radius:4px;font-size:12.5px}
   </div>
   <div class="card">
    <h3 class="ct">Firms with the most recall events</h3>
-   <p class="small" style="margin:0 0 6px">All hazards, 2003–2026, colored by hazard. Raw counts favor large manufacturers with thousands of SKUs over decades; the repeat-episode chart above is a fairer signal of unresolved root causes.</p>
+   <p class="small" style="margin:0 0 6px">All hazards since 2003, colored by hazard. Big manufacturers rank high partly because they sell thousands of products. The repeat chart above is a better way to spot problems that weren't fixed.</p>
    <div id="topFirms"></div>
   </div>
  </div>
@@ -227,8 +227,8 @@ code{background:#eef1f5;padding:1px 5px;border-radius:4px;font-size:12.5px}
 </section>
 
 <section id="qfs">
- <div class="q">So what</div>
- <h2>What a Quality &amp; Food Safety team could do with this</h2>
+ <div class="q">Recommendations</div>
+ <h2>What a quality and food safety team could do with this</h2>
  <div class="card" id="takeaways"></div>
 </section>
 
@@ -261,12 +261,12 @@ const years = E.map(e=>e.year).filter(Boolean);
 const lagsAll = E.map(e=>e.fda_lag).filter(v=>v!=null&&v>=0);
 const cls1 = E.filter(e=>e.cls==="Class I").length;
 const sal = E.filter(e=>e.hazard==="Salmonella").length;
-$("#liveTxt").textContent = `Auto-updated weekly from FDA · data through ${META.data_through_label}`;
+$("#liveTxt").textContent = `Updates every Monday from FDA · data through ${META.data_through_label}`;
 $("#prov").innerHTML = `Data: FDA Enforcement Report (product type "Veterinary"), through ${META.data_through_label}; ${fmt(R.length)} recalled pet products in ${fmt(E.length)} recall events, ${Math.min(...years)}–${Math.max(...years)}. Outbreak timelines from FDA CVM, CDC and FDA warning letters (sources linked).`;
 $("#kpis").innerHTML = [
  [fmt(E.length),"pet food recall events"],[fmt(R.length),"recalled products (SKUs)"],
  [Math.round(100*sal/E.length)+"%","of events are Salmonella"],[Math.round(100*cls1/E.length)+"%","are Class I (serious risk)"],
- [Math.round(median(lagsAll))+" d","median wait for FDA classification"]
+ [Math.round(median(lagsAll))+" d","median days for FDA to classify a recall"]
 ].map(([b,s])=>`<div class="kpi"><b>${b}</b><span>${s}</span></div>`).join("");
 
 // ---------- Q1 stacked years ----------
@@ -346,7 +346,7 @@ function drawCases(){
   el("text",{x:sx(c.lag_days)+6,y:y+rowH/2+4,"font-size":12,fill:"#1d2330","font-weight":600},svg).textContent=`${fmt(c.lag_days)} d${c.approx?"*":""}`;
   r.onmousemove=e=>tip(e,`<b>${esc(c.episode)}</b><br><b>First signal ${esc(c.first_signal_date)}:</b> ${esc(c.first_signal)}<br><b>Recall ${esc(c.recall_date)}:</b> ${esc(c.recall)}<br>${c.harm?`<b>Harm:</b> ${esc(c.harm)}<br>`:""}<span style="color:#9fb0c2">${esc(c.source_label||"")}</span>`);r.onmouseleave=untip;
  });
- $("#caseNotes").innerHTML=`<p><b>No public first-signal date:</b> Hill's canned vitamin D (recall Jan 31, 2019; Hill's acknowledged 85 complaints of pet deaths by Feb 11), the 2018 vitamin D dry foods (Nutrisca, Sunshine Mills, ELM et al.), Blue Buffalo 2017 and Merrick 2018 thyroid hormone, and Northwest Naturals H5N1 (Dec 2024). Firms cite "complaints" without dates, so the complaint-to-recall window can't be checked from public records.</p><p>* approximate date. "Hindsight" rows measure from the first human illness onset, which was only linked to the food after the investigation. Sources: ${cs.map((c,i)=>`<a href="${esc(c.url)}" target="_blank" rel="noopener">${esc(c.short||c.episode)}</a>`).join(" · ")}</p>`;
+ $("#caseNotes").innerHTML=`<p>Some big recalls have no public date for the first complaint: Hill's canned dog food with too much vitamin D (recalled Jan 31, 2019, and Hill's had 85 complaints of pet deaths by Feb 11), the 2018 vitamin D dry foods (Nutrisca, Sunshine Mills, ELM and others), Blue Buffalo in 2017 and Merrick in 2018 (thyroid hormone), and Northwest Naturals in Dec 2024 (H5N1). The companies said they acted on complaints but didn't say when those came in.</p><p>* Approximate date. The two "hindsight" rows measure from the first human illness, which investigators linked to the food only later. Sources: ${cs.map((c,i)=>`<a href="${esc(c.url)}" target="_blank" rel="noopener">${esc(c.short||c.episode)}</a>`).join(" · ")}</p>`;
 }
 function barH(boxSel,rows,colorFn,unit="d"){
  const box=$(boxSel);box.innerHTML="";const W=box.clientWidth||520,rowH=24,m={l:215,r:95,t:4,b:4},H=m.t+m.b+rowH*rows.length;
@@ -409,8 +409,8 @@ function bubble(){
  const svg=el("svg",{width:W,height:H},box);const xm=Math.max(...pts.map(p=>p.yrs))+1;const sx=v=>m.l+(W-m.l-m.r)*v/xm;
  const ylo=Math.log10(0.8),yhi=Math.log10(40);const sy=v=>H-m.b-(H-m.t-m.b)*(Math.log10(v)-ylo)/(yhi-ylo);const rr=n=>4+Math.sqrt(n)*2.2;
  el("rect",{x:m.l,y:m.t,width:(sx(xm/2)-m.l),height:sy(6)-m.t,fill:"#fff7ed"},svg);el("rect",{x:sx(xm/2),y:sy(6),width:W-m.r-sx(xm/2),height:H-m.b-sy(6),fill:"#f0f7fc"},svg);
- el("text",{x:m.l+6,y:m.t+14,"font-size":11,fill:"#c2410c","font-weight":700},svg).textContent="BURSTS: rare but wide";
- el("text",{x:W-m.r-6,y:H-m.b-8,"text-anchor":"end","font-size":11,fill:"#0a5c8a","font-weight":700},svg).textContent="CHRONIC: recurring, narrow";
+ el("text",{x:m.l+6,y:m.t+14,"font-size":11,fill:"#c2410c","font-weight":700},svg).textContent="Rare, many products per recall";
+ el("text",{x:W-m.r-6,y:H-m.b-8,"text-anchor":"end","font-size":11,fill:"#0a5c8a","font-weight":700},svg).textContent="Most years, few products per recall";
  [1,2,5,10,20].forEach(v=>{el("line",{x1:m.l,x2:W-m.r,y1:sy(v),y2:sy(v),stroke:"#eef0f3"},svg);el("text",{x:m.l-6,y:sy(v)+4,"text-anchor":"end","font-size":10.5,fill:"#8a93a3"},svg).textContent=v;});
  for(let v=0;v<=xm;v+=4)el("text",{x:sx(v),y:H-m.b+14,"text-anchor":"middle","font-size":10.5,fill:"#8a93a3"},svg).textContent=v;
  el("text",{x:(W+m.l)/2,y:H-6,"text-anchor":"middle","font-size":11,fill:"#5f6878"},svg).textContent="Years with at least one recall";
@@ -519,55 +519,38 @@ document.querySelectorAll("#tbl th").forEach(th=>th.onclick=()=>{const k=th.data
 // ---------- findings text ----------
 function pct(a,b){return Math.round(100*a/b)+"%";}
 function writeFindings(recRows,ly,lh,rep){
- const li=a=>`<ul>${a.map(([k,v])=>`<li><b>${k}:</b> ${v}</li>`).join("")}</ul>`;
  const S=E.filter(e=>e.hazard==="Salmonella");const eraN=[[2008,2012],[2013,2017],[2018,2022],[2023,2026]].map(p=>{const ev=E.filter(e=>e.year>=p[0]&&e.year<=p[1]);return Math.round(100*ev.filter(e=>e.hazard==="Salmonella").length/ev.length);});
  const Mel=E.filter(e=>e.hazard==="Melamine / cyanuric acid");const spe=a=>(a.reduce((s,e)=>s+e.n,0)/a.length).toFixed(1);
- $("#f-recur").innerHTML=li([
-  ["Salmonella, the constant hazard",`${S.length} of ${E.length} recall events (${pct(S.length,E.length)}), and ${Math.min(...eraN)}–${Math.max(...eraN)}% of events in every five-year window since 2008`],
-  ["Chemical hazards, rare but in bursts",`melamine (all ${Mel.length} events in 2007), aflatoxin (2011 and 2020), vitamin D excess (12 of 20 events in 2018–2021)`],
-  ["Recall size, the ingredient signature",`a melamine event averaged ${spe(Mel)} products vs ${spe(S)} for Salmonella, which is what it looks like when one contaminated ingredient or premix flows into many brands`]]);
+ $("#f-recur").innerHTML=`<p style="margin:0">Salmonella caused ${S.length} of ${E.length} recall events (${pct(S.length,E.length)}), and between ${Math.min(...eraN)}% and ${Math.max(...eraN)}% in every five-year period since 2008. Chemical hazards came in clusters: all ${Mel.length} melamine recalls were in 2007, aflatoxin recalls bunched up in 2011 and 2020, and 12 of 20 vitamin D recalls came between 2018 and 2021. A melamine recall covered ${spe(Mel)} products on average, compared with ${spe(S)} for Salmonella, because one contaminated ingredient went into many brands.</p>`;
  const L=E.filter(e=>e.hazard==="Listeria"),Lr=L.filter(e=>e.category.startsWith("Raw")).length;const A=E.filter(e=>e.hazard==="Aflatoxin / mycotoxin"),Ad=A.filter(e=>e.category==="Dry kibble").length;
  const V=E.filter(e=>e.hazard==="Vitamin D excess"),Vd=V.filter(e=>e.category==="Dry kibble").length;const rawNow=E.filter(e=>e.year>=2018),rawN=rawNow.filter(e=>e.category.startsWith("Raw")).length;
- const N=E.filter(e=>e.hazard==="Nutrient deficiency / excess"),Nc=N.filter(e=>e.species==="Cat").length,Nt=N.filter(e=>/thiamine/i.test(e.reason)).length;
- $("#f-cluster").innerHTML=li([
-  ["Listeria, a raw-food problem",`${Lr} of ${L.length} Listeria events are raw / frozen products`],
-  ["Aflatoxin, a dry-kibble problem",`${Ad} of ${A.length} aflatoxin events are dry kibble made with corn-based ingredients`],
-  ["Vitamin D excess, follows the premix",`dry food accounts for ${Vd} of ${V.length} events, with the rest in wet/canned food and supplements, wherever a mis-formulated vitamin premix went`],
-  ["Raw food, the new front line",`raw / frozen / freeze-dried became the largest single format after 2018 (${pct(rawN,rawNow.length)} of events)`],
-  ["Nutrient errors, mostly a cat problem",`${Nc} of ${N.length} nutrient deficiency/excess events are cat foods, and ${Nt} of them involve low thiamine (vitamin B1), which cats need in large amounts and heat processing destroys`]]);
+ const N=E.filter(e=>e.hazard==="Nutrient deficiency / excess"),Nc=N.filter(e=>e.species==="Cat").length,NT=N.filter(e=>/thiamine/i.test(e.reason)),Nt=NT.length,Ntc=NT.filter(e=>e.species==="Cat").length;
+ $("#f-cluster").innerHTML=`<p style="margin:0">${Lr} of ${L.length} Listeria recalls were raw or frozen food, and ${Ad===A.length?"all "+A.length:Ad+" of "+A.length} aflatoxin recalls were dry kibble. Raw, frozen and freeze-dried food has been the most-recalled product type since 2018 (${pct(rawN,rawNow.length)} of events). ${Vd} of ${V.length} vitamin D recalls were dry food, and most of the rest were canned food and supplements. ${Nc} of ${N.length} vitamin and mineral recalls were cat food. ${Nt} were for low thiamine (vitamin B1), ${Ntc} of them in cat food. Cats need a lot of thiamine, and heat destroys it.</p>`;
  const pre=ly.filter(r=>r.y<2020).map(r=>r.v),post=ly.filter(r=>r.y>=2020).map(r=>r.v);
  const cs=CASES.filter(c=>c.lag_days!=null);const cm=median(cs.map(c=>c.lag_days));
- $("#f-time").innerHTML=li([
-  ["Outbreak timelines, median "+(cm!=null?fmt(Math.round(cm)):"n/a")+" days",`first signal to recall ranged from ${fmt(Math.min(...cs.map(c=>c.lag_days)))} to ${fmt(Math.max(...cs.map(c=>c.lag_days)))} days across ${cs.length} documented episodes`],
-  ["Clear signals, fast recalls",`when a lab positive or an acute, clearly linked illness came first, recalls followed in 1–34 days`],
-  ["Diffuse signals, months to years",`human Salmonella cases linked only in hindsight took 181–232 days, and jerky-treat complaints with no identified agent took about 5.5 years`],
-  ["Public record, much faster since 2020",`FDA's median time from recall start to classification fell from ~${Math.round(median(pre))} days (2012–2019) to ~${Math.round(median(post))} days (2020–2026)`]]);
- const top=rep.slice(0,3).map(r=>`${esc(r.f)} (${r.ep} ${esc(r.h.split(" /")[0])} episodes)`).join(", ");
+ $("#f-time").innerHTML=`<p style="margin:0">Across the ${cs.length} outbreaks with documented dates, the median time from first warning sign to recall was ${fmt(Math.round(cm))} days. When the first sign was a positive lab test or an obvious poisoning, the recall followed within 1 to 34 days. When it was scattered complaints, it took from 181 days (Salmonella in people, linked to the food only later) to about 5.5 years (jerky treats from China, where the cause was never found). FDA's median time to classify a recall fell from about ${Math.round(median(pre))} days in 2012–2019 to about ${Math.round(median(post))} days since 2020.</p>`;
  const sRep=rep.filter(r=>r.h==="Salmonella").length;
- $("#f-repeat").innerHTML=li([
-  ["Repeat recalls, "+rep.length+" firm/hazard pairs",`the same firm recalled for the same hazard again more than 90 days later`],
-  ["Salmonella, most of the repeats",`${sRep} of ${rep.length}, mostly at small raw and treat makers. Most frequent: ${top}`],
-  ["Root cause, likely unresolved",`a repeat of the same pathogen at the same firm usually points to a harborage or process-validation gap rather than bad luck`]]);
+ const tops=rep.slice(0,3).map(r=>`${esc(r.f)} (${r.ep})`);const topTxt=tops.length>1?tops.slice(0,-1).join(", ")+" and "+tops[tops.length-1]:tops[0];
+ $("#f-repeat").innerHTML=`<p style="margin:0">${rep.length} companies recalled products for the same hazard again at least 90 days after an earlier recall. ${sRep} of those repeats were Salmonella, mostly at small raw food and treat makers. The most repeat episodes were at ${topTxt}.</p>`;
 }
 
 function takeaways(){
  $("#takeaways").innerHTML=`<ul class="take">
- <li><b>Salmonella, a standing hazard rather than an incident:</b> about half of recall events in every era. For raw, freeze-dried and treat lines with no kill step, validated interventions (HPP, thermal lethality) and finished-product test-and-hold are the controls that matter.</li>
- <li><b>Chemical hazards, scaled through shared ingredients:</b> melamine (rice protein / wheat gluten), vitamin D (one premix supplier) and aflatoxin (corn) each hit many brands at once. Supplier certificates of analysis plus incoming verification testing (vitamin D in premixes, mycotoxins in grain lots) let one test protect hundreds of SKUs.</li>
- <li><b>Complaint trending, the early-warning system:</b> the slow cases on the timeline started as scattered consumer or vet complaints (vomiting, kidney signs, vitamin D toxicosis). Triage that trends clinical signs by lot would shorten those windows, since positive tests led to recalls within days.</li>
- <li><b>Cat formulas, a thiamine verification point:</b> most nutrient-error recalls are cat foods low in thiamine, a heat-labile vitamin. Checking post-retort thiamine levels in finished product is a targeted, cheap check.</li>
- <li><b>Emerging hazards, first seen in raw products:</b> Listeria and H5N1 cluster almost entirely in raw food, so monitoring for new pathogen risk should start there.</li>
- <li><b>Internal benchmarking, a reusable pipeline:</b> the same pipeline can be pointed at any firm to compare its recall history, hazard mix and repeat rate against the category.</li>
+ <li>Raw, freeze-dried and treat products have no cooking step, so Salmonella controls there need validation (high-pressure processing or a proven heat step) and test-and-hold on finished product before it ships.</li>
+ <li>Melamine (in wheat gluten and rice protein), vitamin D (from one premix supplier) and aflatoxin (in corn) each reached many brands through a shared ingredient. Testing premixes for vitamin D and grain lots for mycotoxins when they arrive covers every product made from them.</li>
+ <li>The slow cases on the timeline started as scattered complaints from owners and vets. Tracking symptoms like vomiting, kidney problems and signs of vitamin D toxicity by production lot would show a pattern sooner.</li>
+ <li>Half of the vitamin and mineral recalls (9 of 18) were cat foods low in thiamine. Testing thiamine in finished cat food after cooking would catch this before release.</li>
+ <li>Listeria and H5N1 recalls were almost all raw food, so raw lines are where new pathogen problems have shown up first.</li>
  </ul>`;
 }
 function methods(){
  $("#methods").innerHTML=`
- <p><b>Recall data, FDA Enforcement Report:</b> FDA Enforcement Report (iRES), product type <i>Veterinary</i> (CVM), through ${META.data_through_label}. <code>scripts/fetch_fda.py</code> downloads the Enforcement Report's public CSV export (no API key), and a GitHub Actions job reruns it and <code>scripts/pipeline.py</code> every Monday, so this page updates itself. Exports are pulled by classification year (2012–2026) and, to capture older records without a classification date (2002–2011, including the 2007 melamine recalls), by pet keywords × recall class. Merged and de-duplicated on recall number: ${fmt(META.vet_total)} veterinary records, of which ${fmt(R.length)} are pet food, treats or supplements, grouped into ${fmt(E.length)} recall events by FDA event ID.</p>
- <p><b>Pet filter and labels, transparent keyword rules:</b> Keeps records mentioning dog/cat/pet/canine/feline/puppy/kitten/treat/chew terms. Removes veterinary drugs and devices (NDC, tablets, injectables, test kits, sterility/potency issues) and livestock feed. <b>Hazard</b> is assigned by an ordered keyword rule set on FDA's "reason for recall" text (e.g. salmonell → Salmonella; aflatoxin|mycotoxin → Aflatoxin). <b>Format</b> and <b>species</b> are assigned from the product description. Event-level labels are the most common label among the event's products. Rules are in <code>scripts/classify.py</code>; spot-check before quoting exact counts.</p>
- <p><b>openFDA adverse events, not usable for pet food:</b> openFDA's <code>animalandveterinary/event</code> endpoint (${META.ade_total}) covers <i>animal drugs</i> only, with brand names masked, so it contains no pet food reports. Pet food complaints go to FDA's Safety Reporting Portal, which is not published as bulk data. openFDA's <code>food/enforcement</code> endpoint also excludes the Veterinary product type (only ~${META.openfda_pet} pet items appear there, filed under Food). That gap is why the time-to-recall lens (a) uses documented outbreak timelines instead of a computed join.</p>
- <p><b>Lag definitions, two different clocks:</b> <i>FDA classification lag</i> = Center Classification Date − Recall Initiation Date, at event level (earliest dates). <i>First signal → recall</i> = the earliest documented complaint, illness report or positive test in FDA/CDC records, minus the first recall date for that episode.</p>
- <p><b>Caveats, detection is not incidence:</b> Recall counts reflect detection and enforcement, not true contamination rates. More sampling (e.g. FDA's 2010s raw pet food Salmonella/Listeria surveillance) produces more recalls. Market withdrawals and non-US recalls are not included. Older records (before June 2012) were captured only when they matched a pet keyword.</p>`;
- $("#foot").innerHTML=`Built by Alana Kwan · Data: U.S. FDA Enforcement Report, FDA CVM, CDC · Not affiliated with FDA or Mars. Recall data is public and unvalidated; verify against FDA before acting.`;
+ <p><b>Recall data.</b> FDA Enforcement Report, product type "Veterinary", through ${META.data_through_label}. <code>scripts/fetch_fda.py</code> downloads the report's public CSV export (no API key needed), and a GitHub Actions job reruns it with <code>scripts/pipeline.py</code> every Monday. FDA caps each export at 1,000 rows, so the script splits large date ranges. Records classified before June 2012 have no classification date, so the script finds them by searching product descriptions for pet keywords. After removing duplicates there are ${fmt(META.vet_total)} veterinary records, ${fmt(R.length)} of which are pet food, treats or supplements, grouped into ${fmt(E.length)} recall events by FDA event ID.</p>
+ <p><b>Filtering and labels.</b> I kept records that mention dogs, cats, pets, puppies, kittens, treats or chews, and dropped animal drugs, vet devices and livestock feed. Hazard labels come from keyword rules on FDA's "reason for recall" text (for example, "salmonell" means Salmonella). Product type and species come from the product description. Each event gets the most common label among its products. The rules are in <code>scripts/classify.py</code>. They miss some cases, so check the records before quoting an exact count.</p>
+ <p><b>Why not openFDA adverse event reports.</b> openFDA's <code>animalandveterinary/event</code> endpoint (${META.ade_total}) only covers animal drugs, and brand names are hidden. Pet food complaints go to FDA's Safety Reporting Portal, which isn't published in bulk. openFDA's <code>food/enforcement</code> endpoint skips the Veterinary product type, so only about ${META.openfda_pet} pet recalls appear there. That's why chart (a) in section 3 uses outbreak dates from FDA and CDC documents.</p>
+ <p><b>Lag definitions.</b> FDA classification lag is the Center Classification Date minus the Recall Initiation Date, using the earliest dates in each event. First sign to recall is the earliest documented complaint, illness report or positive test in FDA or CDC records, minus the date of the first recall.</p>
+ <p><b>Limits.</b> Recall counts measure what got caught, not how often contamination happens. FDA's targeted sampling of raw pet food in the 2010s, for example, raised raw food recall counts. Market withdrawals and recalls outside the US aren't included.</p>`;
+ $("#foot").innerHTML=`Built by Alana Kwan. Data from the U.S. FDA Enforcement Report, FDA CVM and CDC. Not affiliated with FDA or any pet food company. Check FDA's records before relying on a single number.`;
 }
 
 latest();spark();drawChips();drawYears();bubble();salShare();const rec=recurTable();speciesChart();severity();lagHist();tilemap();topFirms();heat();catShift();drawCases();const ly=lagYear();const lh=lagHaz();const rep=repeatChart();renderTable();writeFindings(rec,ly,lh,rep);takeaways();methods();
