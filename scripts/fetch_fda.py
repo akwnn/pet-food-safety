@@ -12,12 +12,37 @@ is split in half and re-requested until every slice is under the cap.
 Files are written only after a download succeeds, and rows are sorted by recall
 number so an unchanged week produces no diff.
 """
-import csv, io, json, os, sys, time, datetime as dt, urllib.parse, urllib.request
+import csv, io, json, os, sys, time, datetime as dt, urllib.parse, urllib.request, http.cookiejar
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RAW = os.path.join(ROOT, "data", "raw")
 BASE = "https://www.accessdata.fda.gov/scripts/ires/index.cfm"
-UA = "Mozilla/5.0 (compatible; pet-food-safety-explorer/1.0; +https://github.com/akwnn/pet-food-safety)"
+UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
+      "(KHTML, like Gecko) Chrome/126.0 Safari/537.36 pet-food-safety-explorer/1.0")
+HEADERS = {"User-Agent": UA, "Accept": "text/csv,text/html,application/xhtml+xml,*/*;q=0.8",
+           "Accept-Language": "en-US,en;q=0.9", "Referer": BASE}
+
+
+class _LogRedirects(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        print(f"  redirect {code} -> {newurl[:160]}")
+        return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+
+# one session with cookies, like a browser: open the search page first, then export
+_JAR = http.cookiejar.CookieJar()
+_OPENER = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(_JAR), _LogRedirects())
+_PRIMED = False
+
+
+def _prime():
+    global _PRIMED
+    if not _PRIMED:
+        try:
+            _OPENER.open(urllib.request.Request(BASE, headers=HEADERS), timeout=60).read()
+        except Exception as e:
+            print(f"  (could not open search page first: {e})")
+        _PRIMED = True
 CAP = 1000
 OLDEST = dt.date(2012, 6, 8)  # earliest classification date the Enforcement Report supports
 KEYWORDS = ["dog", "cat", "cat food", "pet", "treat", "feline", "kitten", "puppy", "canine", "chew"]
@@ -36,8 +61,9 @@ def export_url(desc="", cls=None, dfrom="", dto=""):
 def download(url, tries=4):
     for i in range(tries):
         try:
-            req = urllib.request.Request(url, headers={"User-Agent": UA})
-            text = urllib.request.urlopen(req, timeout=180).read().decode("utf-8-sig", errors="replace")
+            _prime()
+            req = urllib.request.Request(url, headers=HEADERS)
+            text = _OPENER.open(req, timeout=180).read().decode("utf-8-sig", errors="replace")
             if not text.startswith("Product Type"):
                 raise ValueError("unexpected response (not an Enforcement Report CSV)")
             reader = csv.DictReader(io.StringIO(text))
