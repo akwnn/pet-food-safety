@@ -39,6 +39,16 @@ h2{font-family:var(--serif);font-weight:500;font-size:28px;margin:0 0 6px}
 .finding b{color:#7c2d12}
 .finding ul{margin:0;padding-left:18px}.finding li{margin:4px 0}
 h3.ct{margin:0 0 4px;font-family:var(--serif);font-weight:500;font-size:18px}
+.live{display:inline-flex;align-items:center;gap:8px;background:#0f3b2a;color:#b9f5d0;border:1px solid #1f6b4a;border-radius:999px;padding:4px 12px;font-size:12.5px;font-weight:600;margin-top:14px}
+.live .dot{width:8px;height:8px;border-radius:50%;background:#34d399;box-shadow:0 0 0 0 rgba(52,211,153,.7);animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(52,211,153,.6)}70%{box-shadow:0 0 0 8px rgba(52,211,153,0)}100%{box-shadow:0 0 0 0 rgba(52,211,153,0)}}
+.latest{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.lcard{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px;cursor:pointer;border-top:4px solid #ccc}
+.lcard:hover{box-shadow:0 4px 16px rgba(0,0,0,.06)}
+.lcard .d{font-size:12px;color:var(--muted)}.lcard .f{font-weight:700;margin:2px 0 4px}.lcard .r{font-size:13px;color:#39404d}
+.newstats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+.ns{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 16px}.ns b{display:block;font-family:var(--serif);font-size:26px;font-weight:500}.ns span{font-size:12.5px;color:var(--muted)}
+@media(max-width:900px){.latest,.newstats{grid-template-columns:1fr 1fr}}
 .spark{margin-top:22px;background:#172a3c;border-radius:10px;padding:12px 16px 6px}
 .spark .lbl{font-size:12px;color:#a9b8c8;margin-bottom:2px}
 .legend{display:flex;flex-wrap:wrap;gap:10px;font-size:12px;color:var(--muted);margin-top:6px}
@@ -78,15 +88,24 @@ code{background:#eef1f5;padding:1px 5px;border-radius:4px;font-size:12.5px}
   <h1>Which hazards keep coming back in pet food, and how long do recalls take?</h1>
   <p class="dek">An explorer built on every FDA Center for Veterinary Medicine recall of dog, cat and pet food, treats and supplements in the FDA Enforcement Report, paired with documented outbreak timelines from FDA investigations.</p>
   <div class="prov" id="prov"></div>
+  <div class="live" id="live"><span class="dot"></span><span id="liveTxt"></span></div>
   <div class="kpis" id="kpis"></div>
   <div class="spark"><div class="lbl">Pet food recall events per year, by recall start date (hover for detail)</div><div id="spark"></div></div>
  </div>
 </header>
 <nav class="toc"><div class="wrap">
- <a href="#recur">1 · Recurring hazards</a><a href="#cluster">2 · Hazard × product clusters</a><a href="#time">3 · Time to recall</a><a href="#repeat">4 · Repeat recalls</a><a href="#explore">5 · Explore every recall</a><a href="#qfs">6 · QFS takeaways</a><a href="#method">Methods</a>
+ <a href="#latest">Latest recalls</a><a href="#recur">1 · Recurring hazards</a><a href="#cluster">2 · Hazard × product clusters</a><a href="#time">3 · Time to recall</a><a href="#repeat">4 · Repeat recalls</a><a href="#explore">5 · Explore every recall</a><a href="#qfs">6 · QFS takeaways</a><a href="#method">Methods</a>
 </div></nav>
 
 <main class="wrap">
+
+<section id="latest">
+ <div class="q">Updated weekly</div>
+ <h2>Latest pet food recalls</h2>
+ <p class="lede">The newest recall events in FDA's Enforcement Report, refreshed automatically every week. Click a card to open it in the explorer.</p>
+ <div class="newstats" id="newstats"></div>
+ <div class="latest" id="latestCards"></div>
+</section>
 
 <section id="recur">
  <div class="q">Question 1</div>
@@ -242,7 +261,8 @@ const years = E.map(e=>e.year).filter(Boolean);
 const lagsAll = E.map(e=>e.fda_lag).filter(v=>v!=null&&v>=0);
 const cls1 = E.filter(e=>e.cls==="Class I").length;
 const sal = E.filter(e=>e.hazard==="Salmonella").length;
-$("#prov").innerHTML = `Data: FDA Enforcement Report (product type "Veterinary"), exported ${META.exported}; ${fmt(R.length)} recalled pet products in ${fmt(E.length)} recall events, ${Math.min(...years)}–${Math.max(...years)}. Outbreak timelines from FDA CVM, CDC and FDA warning letters (sources linked).`;
+$("#liveTxt").textContent = `Auto-updated weekly from FDA · data through ${META.data_through_label}`;
+$("#prov").innerHTML = `Data: FDA Enforcement Report (product type "Veterinary"), through ${META.data_through_label}; ${fmt(R.length)} recalled pet products in ${fmt(E.length)} recall events, ${Math.min(...years)}–${Math.max(...years)}. Outbreak timelines from FDA CVM, CDC and FDA warning letters (sources linked).`;
 $("#kpis").innerHTML = [
  [fmt(E.length),"pet food recall events"],[fmt(R.length),"recalled products (SKUs)"],
  [Math.round(100*sal/E.length)+"%","of events are Salmonella"],[Math.round(100*cls1/E.length)+"%","are Class I (serious risk)"],
@@ -272,6 +292,7 @@ function drawYears(){
  stacks.forEach((st,i)=>{st.forEach(s=>{if(!s.n)return;const r=el("rect",{x:m.l+i*bw+2,width:bw-4,y:sy(s.a+s.n),height:sy(s.a)-sy(s.a+s.n),fill:COL[s.h],rx:2},svg);
    r.onmousemove=e=>{const ev=E.filter(x=>x.year===s.y&&x.hazard===s.h);tip(e,`<b>${s.y} · ${esc(s.h)}</b><br>${s.n} recall event${s.n>1?"s":""}, ${ev.reduce((a,b)=>a+b.n,0)} products<br><span style="color:#9fb0c2">${esc([...new Set(ev.map(x=>x.firm_n))].slice(0,5).join(", "))}</span>`);};r.onmouseleave=untip;
    r.onclick=()=>{setFilters({h:s.h,y:String(s.y)});};});
+  if(ys[i]===new Date(META.data_through+"T00:00:00").getFullYear()){const tot=st.reduce((a,b)=>a+b.n,0);el("text",{x:m.l+i*bw+bw/2,y:sy(tot)-5,"text-anchor":"middle","font-size":10,fill:"#8a93a3","font-style":"italic"},svg).textContent="to date";}
   if(ys.length<=30||i%2===0)el("text",{x:m.l+i*bw+bw/2,y:H-10,"text-anchor":"middle","font-size":10.5,fill:"#5f6878"},svg).textContent=String(ys[i]).slice(-2)==="00"?ys[i]:"'"+String(ys[i]).slice(-2);
  });
 }
@@ -461,6 +482,19 @@ function topFirms(){
   el("text",{x:x+5,y:y+rowH/2+4,"font-size":11,fill:"#5f6878"},svg).textContent=ev.length;});
 }
 
+
+function latest(){
+ const asOf=new Date(META.data_through+"T00:00:00");const dAgo=d=>Math.round((asOf-new Date(d+"T00:00:00"))/864e5);
+ const ev=E.filter(e=>e.init).sort((a,b)=>(b.init).localeCompare(a.init));
+ const in90=ev.filter(e=>dAgo(e.init)<=90),in365=ev.filter(e=>dAgo(e.init)<=365);
+ const prior=E.filter(e=>e.init&&dAgo(e.init)>365&&dAgo(e.init)<=730);
+ const topH=a=>{const c={};a.forEach(e=>c[e.hazard]=(c[e.hazard]||0)+1);const t=Object.entries(c).sort((x,y)=>y[1]-x[1])[0];return t?`${t[0].split(" /")[0]} (${t[1]})`:"–";};
+ const rawShare=a=>a.length?Math.round(100*a.filter(e=>e.category.startsWith("Raw")).length/a.length)+"%":"–";
+ $("#newstats").innerHTML=[[in90.length,"recall events started in the last 90 days"],[in365.length,`in the last 12 months (vs ${prior.length} the year before)`],[topH(in365),"top hazard, last 12 months"],[rawShare(in365),"raw / frozen share, last 12 months"]].map(([b,s])=>`<div class="ns"><b>${b}</b><span>${s}</span></div>`).join("");
+ $("#latestCards").innerHTML=ev.slice(0,6).map(e=>`<div class="lcard" data-id="${esc(e.id)}" style="border-top-color:${COL[e.hazard]}"><div class="d">Recall started ${e.init} · <span class="pill ${e.cls==="Class I"?"c1":e.cls==="Class II"?"c2":"c3"}">${esc(e.cls)}</span></div><div class="f">${esc(e.firm_n)}</div><div class="r"><b style="color:${COL[e.hazard]}">${esc(e.hazard)}</b> · ${esc(e.category)} · ${e.n} product${e.n>1?"s":""}</div><div class="r" style="color:#6b7280;margin-top:4px">${esc(e.reason.slice(0,140))}${e.reason.length>140?"…":""}</div></div>`).join("");
+ document.querySelectorAll(".lcard").forEach(c=>c.onclick=()=>{setFilters({q:"",});sortK="init";sortD=-1;renderTable();setTimeout(()=>{const tr=document.querySelector(`#tbl tr.ev[data-id="${c.dataset.id}"]`);if(tr){tr.click();tr.scrollIntoView({block:"center"});}},400);});
+}
+
 // ---------- Explorer ----------
 const byEv={};R.forEach(r=>{(byEv[r.ev||r.rn]=byEv[r.ev||r.rn]||[]).push(r);});
 let sortK="init",sortD=-1;
@@ -528,7 +562,7 @@ function takeaways(){
 }
 function methods(){
  $("#methods").innerHTML=`
- <p><b>Recall data, FDA Enforcement Report:</b> FDA Enforcement Report (iRES), product type <i>Veterinary</i> (CVM), exported ${META.exported}. Exports were pulled by classification year (2012–2026) and, to capture older records without a classification date (2002–2011, including the 2007 melamine recalls), by pet keywords × recall class. Merged and de-duplicated on recall number: ${fmt(META.vet_total)} veterinary records, of which ${fmt(R.length)} are pet food, treats or supplements, grouped into ${fmt(E.length)} recall events by FDA event ID.</p>
+ <p><b>Recall data, FDA Enforcement Report:</b> FDA Enforcement Report (iRES), product type <i>Veterinary</i> (CVM), through ${META.data_through_label}. <code>scripts/fetch_fda.py</code> downloads the Enforcement Report's public CSV export (no API key), and a GitHub Actions job reruns it and <code>scripts/pipeline.py</code> every Monday, so this page updates itself. Exports are pulled by classification year (2012–2026) and, to capture older records without a classification date (2002–2011, including the 2007 melamine recalls), by pet keywords × recall class. Merged and de-duplicated on recall number: ${fmt(META.vet_total)} veterinary records, of which ${fmt(R.length)} are pet food, treats or supplements, grouped into ${fmt(E.length)} recall events by FDA event ID.</p>
  <p><b>Pet filter and labels, transparent keyword rules:</b> Keeps records mentioning dog/cat/pet/canine/feline/puppy/kitten/treat/chew terms. Removes veterinary drugs and devices (NDC, tablets, injectables, test kits, sterility/potency issues) and livestock feed. <b>Hazard</b> is assigned by an ordered keyword rule set on FDA's "reason for recall" text (e.g. salmonell → Salmonella; aflatoxin|mycotoxin → Aflatoxin). <b>Format</b> and <b>species</b> are assigned from the product description. Event-level labels are the most common label among the event's products. Rules are in <code>scripts/classify.py</code>; spot-check before quoting exact counts.</p>
  <p><b>openFDA adverse events, not usable for pet food:</b> openFDA's <code>animalandveterinary/event</code> endpoint (${META.ade_total}) covers <i>animal drugs</i> only, with brand names masked, so it contains no pet food reports. Pet food complaints go to FDA's Safety Reporting Portal, which is not published as bulk data. openFDA's <code>food/enforcement</code> endpoint also excludes the Veterinary product type (only ~${META.openfda_pet} pet items appear there, filed under Food). That gap is why the time-to-recall lens (a) uses documented outbreak timelines instead of a computed join.</p>
  <p><b>Lag definitions, two different clocks:</b> <i>FDA classification lag</i> = Center Classification Date − Recall Initiation Date, at event level (earliest dates). <i>First signal → recall</i> = the earliest documented complaint, illness report or positive test in FDA/CDC records, minus the first recall date for that episode.</p>
@@ -536,7 +570,7 @@ function methods(){
  $("#foot").innerHTML=`Built by Alana Kwan · Data: U.S. FDA Enforcement Report, FDA CVM, CDC · Not affiliated with FDA or Mars. Recall data is public and unvalidated; verify against FDA before acting.`;
 }
 
-spark();drawChips();drawYears();bubble();salShare();const rec=recurTable();speciesChart();severity();lagHist();tilemap();topFirms();heat();catShift();drawCases();const ly=lagYear();const lh=lagHaz();const rep=repeatChart();renderTable();writeFindings(rec,ly,lh,rep);takeaways();methods();
+latest();spark();drawChips();drawYears();bubble();salShare();const rec=recurTable();speciesChart();severity();lagHist();tilemap();topFirms();heat();catShift();drawCases();const ly=lagYear();const lh=lagHaz();const rep=repeatChart();renderTable();writeFindings(rec,ly,lh,rep);takeaways();methods();
 let rT;addEventListener("resize",()=>{clearTimeout(rT);rT=setTimeout(()=>{drawYears();drawCases();lagYear();lagHaz();repeatChart();$("#catShift").innerHTML="";catShift();spark();bubble();salShare();speciesChart();severity();lagHist();tilemap();topFirms();},200);});
 </script>
 </body>

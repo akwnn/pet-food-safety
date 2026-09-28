@@ -11,9 +11,17 @@ from classify import hazard, category, species, NONFOOD
 
 # 1. merge + de-duplicate on recall number
 rows = {}
+latest_seen = None  # newest date anywhere in the export = how current the data is
 for f in sorted(glob.glob(os.path.join(ROOT, "data/raw/*.csv"))):
     for x in csv.DictReader(open(f, encoding="utf-8-sig")):
         rows[x["Recall Number"].strip().upper()] = x
+        for col in ("Center Classification Date", "Report Date", "Recall Initiation Date"):
+            try:
+                dd = dt.datetime.strptime((x.get(col) or "").strip(), "%m/%d/%Y").date()
+            except ValueError:
+                continue
+            if dd <= dt.date.today() and (latest_seen is None or dd > latest_seen):
+                latest_seen = dd
 vet_total = len(rows)
 
 # 2. keep pet food / treats / supplements; drop vet drugs, devices, livestock feed
@@ -73,7 +81,35 @@ wcsv(os.path.join(ROOT, "data/recalled_products.csv"), recs, ["rn","ev","firm","
 # 5. build the self-contained dashboard
 cases = json.load(open(os.path.join(ROOT, "data/outbreak_timelines.json")))
 slim = [{k: (r[k][:260] if k == "desc" else r[k]) for k in ["rn","ev","firm","desc","cls","init"]} for r in recs]
-meta = dict(exported="Sept 28, 2026", vet_total=vet_total, ade_total="1.36M reports", openfda_pet="~100")
+meta = dict(data_through=str(latest_seen), data_through_label=f"{latest_seen:%b} {latest_seen.day}, {latest_seen.year}",
+            vet_total=vet_total, ade_total="1.36M reports", openfda_pet="~100")
 data = json.dumps(dict(events=events, records=slim, cases=cases, meta=meta), separators=(",", ":"))
 open(os.path.join(ROOT, "index.html"), "w").write(open(os.path.join(ROOT, "scripts/template.html")).read().replace("__DATA__", data))
+# 6. keep the README's live stats block in sync with the data
+import statistics
+readme = os.path.join(ROOT, "README.md")
+if os.path.exists(readme):
+    txt = open(readme).read()
+    a, b = "<!-- STATS:START -->", "<!-- STATS:END -->"
+    if a in txt and b in txt:
+        yrs = [e["year"] for e in events if e["year"]]
+        lags = [e["fda_lag"] for e in events if e["fda_lag"] is not None and e["fda_lag"] >= 0]
+        sal = sum(1 for e in events if e["hazard"] == "Salmonella")
+        c1 = sum(1 for e in events if e["cls"] == "Class I")
+        newest = max((e for e in events if e["init"]), key=lambda e: e["init"])
+        in365 = sum(1 for e in events if e["init"] and (latest_seen - dt.date.fromisoformat(e["init"])).days <= 365)
+        block = "\n".join([a,
+            f"| Data through | **{meta['data_through_label']}** (auto-refreshed weekly) |", "|---|---|",
+            f"| Pet food recall events | {len(events):,} ({min(yrs)}\u2013{max(yrs)}) |",
+            f"| Recalled products (SKUs) | {len(recs):,} |",
+            f"| Salmonella share of events | {round(100*sal/len(events))}% |",
+            f"| Class I (most serious) share | {round(100*c1/len(events))}% |",
+            f"| Median days, recall start \u2192 FDA classification | {round(statistics.median(lags))} |",
+            f"| Recall events in the last 12 months | {in365} |",
+            f"| Most recent recall event | {newest['init']}: {newest['firm_n']} ({newest['hazard']}) |",
+            b])
+        txt = txt[:txt.index(a)] + block + txt[txt.index(b) + len(b):]
+        open(readme, "w").write(txt)
+
+print(f"Data through {meta['data_through_label']}.")
 print(f"{vet_total} veterinary recall records -> {len(recs)} pet products -> {len(events)} recall events. Wrote index.html")
