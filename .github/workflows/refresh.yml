@@ -1,0 +1,47 @@
+name: Weekly FDA data refresh
+
+on:
+  schedule:
+    - cron: "17 11 * * 1"   # every Monday, 11:17 UTC (7:17 am ET)
+  workflow_dispatch:
+    inputs:
+      full:
+        description: "Re-download all history (every year + pre-2012 keyword slices)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Download latest FDA veterinary recalls
+        run: python scripts/fetch_fda.py ${{ inputs.full && '--full' || '' }}
+
+      - name: Rebuild dataset, dashboard and README stats
+        run: python scripts/pipeline.py
+
+      - name: Commit only if the recall data changed
+        run: |
+          git config user.name "Alana Kwan"
+          git config user.email "akwnn@users.noreply.github.com"
+          git add data index.html README.md
+          if git diff --cached --quiet; then
+            echo "No new FDA recall data this week."
+            exit 0
+          fi
+          git commit -m "Weekly FDA data refresh: data through $(python -c "import json,re;print(re.search(r'data_through\":\"([0-9-]+)', open('index.html').read()).group(1))")"
+          git push
