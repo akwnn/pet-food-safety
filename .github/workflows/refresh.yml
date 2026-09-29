@@ -11,7 +11,8 @@ on:
         default: false
 
 permissions:
-  contents: write
+  contents: write   # commit refreshed data
+  actions: write    # keep the weekly schedule enabled
 
 concurrency:
   group: refresh
@@ -20,19 +21,17 @@ concurrency:
 jobs:
   refresh:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
+      # fetch_fda.py keeps the saved data if FDA can't be reached, and only fails
+      # when the saved data is more than 45 days old.
       - name: Download latest FDA veterinary recalls
-        run: python scripts/fetch_fda.py ${{ inputs.full && '--full' || '' }}
+        run: python3 scripts/fetch_fda.py ${{ inputs.full && '--full' || '' }}
 
       - name: Rebuild dataset, dashboard and README stats
-        run: python scripts/pipeline.py
+        run: python3 scripts/pipeline.py
 
       - name: Commit only if the recall data changed
         run: |
@@ -43,5 +42,16 @@ jobs:
             echo "No new FDA recall data this week."
             exit 0
           fi
-          git commit -m "Weekly FDA data refresh: data through $(python -c "import json,re;print(re.search(r'data_through\":\"([0-9-]+)', open('index.html').read()).group(1))")"
-          git push
+          through=$(grep -o '"data_through":"[0-9-]*"' index.html | head -1 | cut -d'"' -f4)
+          git commit -m "Weekly FDA data refresh: data through ${through}"
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      # GitHub pauses scheduled workflows in public repos after 60 days without
+      # repository activity. Re-enabling through the API keeps the schedule on
+      # without making empty commits.
+      - name: Keep the weekly schedule enabled
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api --method PUT "repos/${{ github.repository }}/actions/workflows/refresh.yml/enable" && echo "Schedule is enabled."
