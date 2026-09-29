@@ -53,6 +53,12 @@ for x in rows.values():
         report=str(d(x["Report Date"]) or ""), term=str(d(x["Termination Date"]) or ""),
         hazard=hazard(reason, desc), category=category(desc), species=species(desc + " " + reason)))
 
+# sanity check: never publish a dashboard built from a broken or partial download
+MIN_PET_RECORDS = 1500  # the Sept 2026 dataset had 1,910; recalls only get added over time
+if len(recs) < MIN_PET_RECORDS:
+    sys.exit(f"Only {len(recs)} pet recall records found (expected at least {MIN_PET_RECORDS}). "
+             "Not rebuilding the dashboard; check data/raw.")
+
 # 3. roll up to recall events (FDA event ID)
 by = collections.defaultdict(list)
 for r in recs: by[r["ev"] or r["rn"]].append(r)
