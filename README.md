@@ -43,6 +43,8 @@ So I used the FDA Enforcement Report for recalls. For the first-sign-to-recall t
 ## How the data updates
 `scripts/fetch_fda.py` downloads the Enforcement Report's public CSV export, which doesn't need an API key. FDA caps each export at 1,000 rows, so the script splits any date range that hits the cap. Every Monday, `.github/workflows/refresh.yml` runs the download and `scripts/pipeline.py`, and commits only if FDA's data changed. GitHub Pages republishes the dashboard after each commit. The "data through" date on the page is the newest date in FDA's records.
 
+If FDA's site is down or turns away the request, the script retries with a fresh session, keeps the saved data, and tries again the next Monday. It only fails the run, which sends a GitHub email, if the saved data is more than 45 days old. It also won't replace a file when FDA's columns change or a download comes back with noticeably fewer rows, and the pipeline refuses to publish a dashboard built from fewer than 1,500 pet recall records. GitHub pauses scheduled jobs in public repos after 60 days without activity, so the job re-enables its own schedule each time it runs.
+
 To refresh by hand (Python 3.9+, standard library only):
 ```bash
 python3 scripts/fetch_fda.py          # last 3 years
