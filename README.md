@@ -12,7 +12,7 @@ The dashboard covers every dog food, cat food, pet treat and pet supplement reca
 <!-- STATS:START -->
 | | |
 |---|---|
-| Data through | Sep 24, 2026 (updates every Monday) |
+| Data through | Sep 28, 2026 (updates every Monday) |
 | Pet food recall events | 329 (2003–2026) |
 | Recalled products (SKUs) | 1,910 |
 | Salmonella share of events | 50% |
