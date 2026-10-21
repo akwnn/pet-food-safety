@@ -3,558 +3,724 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pet Food Safety Signal Explorer</title>
+<title>Pet food recall explorer</title>
+<meta name="description" content="Every US dog food, cat food, pet treat and supplement recall in FDA's Enforcement Report since 2003, updated every Monday.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --ink:#1d2330; --muted:#5f6878; --line:#e3e6ec; --bg:#f7f6f2; --card:#fff; --accent:#0a5c8a; --accent2:#c2410c;
-  --serif: Georgia, "Iowan Old Style", "Times New Roman", serif;
-  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif;
+  --cobalt:#2364f0;--orange:#f26a21;--orange-text:#c24f17;--navy:#2b3a55;--ink:#1d2433;--muted:#5d6b86;
+  --pole:#8aa4d4;--wire:#7c98c8;--building:#b4ccea;--haze:#c9dbf0;--haze2:#d6e6f5;--haze3:#f3f8fd;
+  --page:#eaeff6;--outer:#dde4ee;--line:#e6ecf4;
+  --f:"Manrope","Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5}
-a{color:var(--accent)}
-header{background:#12202f;color:#fff;padding:48px 24px 36px}
-.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
-header .wrap{padding:0}
-.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#9fc3dc;font-weight:600}
-h1{font-family:var(--serif);font-weight:500;font-size:42px;line-height:1.1;margin:10px 0 12px;max-width:860px}
-.dek{font-size:18px;color:#d5dde6;max-width:820px;margin:0}
-.prov{margin-top:18px;font-size:13px;color:#9fb0c2}
-.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:#2b3a4b;margin-top:28px;border-radius:10px;overflow:hidden}
-.kpi{background:#172a3c;padding:16px 18px}
-.kpi b{display:block;font-family:var(--serif);font-size:30px;font-weight:500;color:#fff}
-.kpi span{font-size:12.5px;color:#a9b8c8}
-nav.toc{position:sticky;top:0;z-index:5;background:rgba(247,246,242,.95);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
-nav.toc .wrap{display:flex;gap:22px;overflow-x:auto;padding-top:10px;padding-bottom:10px}
-nav.toc a{font-size:13px;font-weight:600;color:var(--muted);text-decoration:none;white-space:nowrap}
-nav.toc a:hover{color:var(--ink)}
-section{padding:44px 0 8px}
-h2{font-family:var(--serif);font-weight:500;font-size:28px;margin:0 0 6px}
-.q{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent2);font-weight:700}
-.lede{color:var(--muted);max-width:820px;margin:4px 0 18px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:18px}
-.grid2{display:grid;grid-template-columns:1.35fr 1fr;gap:18px}
-.grid2b{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-.finding{border-left:4px solid var(--accent2);background:#fff7f1;padding:12px 16px;border-radius:0 10px 10px 0;margin:0 0 16px;font-size:15px}
-.finding b{color:#7c2d12}
-.finding ul{margin:0;padding-left:18px}.finding li{margin:4px 0}
-h3.ct{margin:0 0 4px;font-family:var(--serif);font-weight:500;font-size:18px}
-.live{display:inline-flex;align-items:center;gap:8px;background:#0f3b2a;color:#b9f5d0;border:1px solid #1f6b4a;border-radius:999px;padding:4px 12px;font-size:12.5px;font-weight:600;margin-top:14px}
-.live .dot{width:8px;height:8px;border-radius:50%;background:#34d399;box-shadow:0 0 0 0 rgba(52,211,153,.7);animation:pulse 2s infinite}
-@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(52,211,153,.6)}70%{box-shadow:0 0 0 8px rgba(52,211,153,0)}100%{box-shadow:0 0 0 0 rgba(52,211,153,0)}}
-.latest{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.lcard{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px;cursor:pointer;border-top:4px solid #ccc}
-.lcard:hover{box-shadow:0 4px 16px rgba(0,0,0,.06)}
-.lcard .d{font-size:12px;color:var(--muted)}.lcard .f{font-weight:700;margin:2px 0 4px}.lcard .r{font-size:13px;color:#39404d}
-.newstats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
-.ns{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 16px}.ns b{display:block;font-family:var(--serif);font-size:26px;font-weight:500}.ns span{font-size:12.5px;color:var(--muted)}
-@media(max-width:900px){.latest,.newstats{grid-template-columns:1fr 1fr}}
-.spark{margin-top:22px;background:#172a3c;border-radius:10px;padding:12px 16px 6px}
-.spark .lbl{font-size:12px;color:#a9b8c8;margin-bottom:2px}
-.legend{display:flex;flex-wrap:wrap;gap:10px;font-size:12px;color:var(--muted);margin-top:6px}
-.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
-.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
-.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:4px 10px;font-size:12.5px;cursor:pointer;display:flex;align-items:center;gap:6px;user-select:none}
-.chip i{width:10px;height:10px;border-radius:3px;display:inline-block}
-.chip.off{opacity:.38}
-.small{font-size:12.5px;color:var(--muted)}
-svg text{font-family:var(--sans)}
-.tt{position:fixed;pointer-events:none;background:#12202f;color:#fff;font-size:12.5px;padding:8px 10px;border-radius:8px;max-width:340px;z-index:50;display:none;box-shadow:0 6px 20px rgba(0,0,0,.2)}
-table{width:100%;border-collapse:collapse;font-size:13.5px}
-th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);border-bottom:1px solid var(--line);padding:8px 8px;cursor:pointer;white-space:nowrap}
-td{border-bottom:1px solid #f0f1f4;padding:8px;vertical-align:top}
-tr.ev:hover{background:#f6f9fc;cursor:pointer}
-tr.detail td{background:#fafbfc;font-size:12.5px;color:#39404d}
-.pill{display:inline-block;padding:1px 8px;border-radius:999px;font-size:11.5px;font-weight:600;white-space:nowrap}
-.c1{background:#fde2e1;color:#991b1b}.c2{background:#fef3c7;color:#92400e}.c3{background:#e0f2fe;color:#075985}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--outer);font-family:var(--f);color:var(--ink);font-size:14.5px;line-height:1.5;font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
+a{color:var(--cobalt)}
+svg text{font-family:var(--f)}
+.card svg{max-width:100%;height:auto}
+.hero>*{min-width:0}
+button{font:inherit;color:inherit}
+.shell{max-width:1240px;margin:24px auto;background:var(--page);border-radius:28px;padding:20px 24px 28px}
+
+/* header */
+.hd{display:flex;align-items:center;gap:16px;margin-bottom:22px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px;white-space:nowrap;color:var(--ink);text-decoration:none}
+.logo i{width:38px;height:38px;border-radius:12px;background:var(--cobalt);display:grid;place-items:center;flex:none}
+.nav{margin:0 auto;display:flex;gap:2px;background:#fff;border-radius:999px;padding:5px;overflow-x:auto;scrollbar-width:none;max-width:100%}
+.nav::-webkit-scrollbar{display:none}
+.nav a{padding:8px 14px;border-radius:999px;color:var(--muted);text-decoration:none;font-weight:600;font-size:13.5px;white-space:nowrap}
+.nav a:hover{color:var(--ink)}
+.nav a.on{background:var(--ink);color:#fff}
+.right{display:flex;gap:8px;align-items:center}
+.pill{background:#fff;border-radius:999px;padding:9px 14px;font-size:13px;font-weight:600;color:var(--navy);display:flex;align-items:center;gap:8px;white-space:nowrap}
+.pill .d{width:7px;height:7px;border-radius:50%;background:var(--cobalt)}
+.circ{width:38px;height:38px;border-radius:50%;background:#fff;display:grid;place-items:center;border:0;cursor:pointer;flex:none}
+.circ:hover{box-shadow:inset 0 0 0 1px var(--haze)}
+
+/* page titles */
+.hello{display:flex;align-items:flex-end;justify-content:space-between;margin:0 4px 18px;gap:16px;flex-wrap:wrap}
+.hello h1,.hello h2{font-size:28px;font-weight:700;margin:0;letter-spacing:-.01em;line-height:1.2}
+.hello p{margin:6px 0 0;color:var(--navy);font-size:15px;max-width:860px}
+.seg{display:flex;background:#fff;border-radius:999px;padding:4px;flex:none}
+.seg button{border:0;background:none;padding:7px 14px;border-radius:999px;font-weight:600;font-size:13px;color:var(--muted);cursor:pointer}
+.seg button.on{background:var(--haze3);color:var(--cobalt);box-shadow:inset 0 0 0 1px var(--haze)}
+.seg.sm button{padding:5px 11px;font-size:12.5px}
+
+/* grids + cards */
+.g1{display:grid;grid-template-columns:1.75fr 1fr;gap:16px;margin-bottom:16px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1.1fr;gap:16px;margin-bottom:16px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.card{background:#fff;border-radius:24px;padding:20px 22px;margin-bottom:16px;min-width:0}
+.g1 .card,.g2 .card,.g3 .card{margin-bottom:0}
+.ct{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.ct h3{margin:0;font-size:15.5px;font-weight:700;display:flex;align-items:center;gap:10px}
+.ct p{margin:2px 0 0;color:var(--muted);font-size:13px;flex-basis:100%}
+.ic{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;flex:none}
+.mini{text-decoration:none;font-size:12.5px;font-weight:600;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:5px 11px;white-space:nowrap;background:#fff}
+button.mini{cursor:pointer}button.mini:hover{color:var(--ink)}
+.big{font-size:54px;font-weight:700;letter-spacing:-.02em;line-height:1}
+.sub{color:var(--muted);font-size:13.5px}
+.tag{display:inline-block;font-size:12px;font-weight:700;color:var(--cobalt);background:var(--haze3);border:1px solid var(--haze);border-radius:999px;padding:2px 8px;margin-left:6px;vertical-align:middle}
+.scroll{overflow-x:auto}
+.note{font-size:12.5px;color:var(--muted);margin:10px 0 0}
+.note p{margin:0 0 8px}
+
+/* overview: recall events card */
+.hero{display:grid;grid-template-columns:200px 1fr;gap:14px;align-items:end}
+.hero .k{margin-top:10px}
+.hero .yr{margin-top:20px}
+.hero .yr b{font-size:24px;font-weight:700}
+
+/* overview: blue card */
+.blue{background:var(--cobalt);color:#fff;position:relative;overflow:hidden}
+.blue .label{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.16);border-radius:999px;padding:6px 12px;font-weight:700;font-size:12.5px}
+.blue .big{color:#fff;margin-top:24px}
+.blue p{margin:8px 0 18px;color:#e2eaff;font-size:14px;max-width:330px;position:relative}
+.blue .tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;position:relative}
+.blue .tiles div{background:rgba(255,255,255,.14);border-radius:16px;padding:12px 14px}
+.blue .tiles b{display:block;font-size:22px}
+.blue .tiles span{font-size:12.5px;color:#e2eaff}
+.blue .deco{position:absolute;right:-34px;top:-34px;opacity:.12}
+
+/* ring legend */
+.leg{display:grid;grid-template-columns:1fr 1fr;gap:6px 14px;margin-top:12px}
+.leg div{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--navy);min-width:0}
+.leg i{width:9px;height:9px;border-radius:3px;display:inline-block;flex:none}
+.leg span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.leg b{margin-left:auto;font-weight:700;color:var(--ink)}
+.callout{display:flex;align-items:center;gap:6px;justify-content:center;border:1px solid var(--line);border-radius:999px;padding:7px 12px;font-size:12.5px;font-weight:600;margin:10px auto 0;width:max-content;max-width:100%}
+.callout em{font-style:normal;color:var(--orange-text)}
+
+/* progress bars */
+.pr{margin:12px 0}
+.pr .t{display:flex;justify-content:space-between;font-size:13px;color:var(--navy);margin-bottom:6px}
+.pr .t b{color:var(--ink)}
+.pr .b{height:10px;border-radius:999px;background:var(--haze3);position:relative}
+.pr .b i{position:absolute;left:0;top:0;bottom:0;border-radius:999px;background:var(--haze)}
+.pr.hi .b i{background:var(--cobalt)}
+.pr .flag{position:absolute;top:50%;transform:translate(-50%,-50%);background:var(--ink);color:#fff;font-size:11px;font-weight:700;border-radius:999px;padding:2px 8px}
+
+/* latest list */
+.li{display:flex;align-items:center;gap:12px;padding:11px 8px;border-bottom:1px solid var(--line);cursor:pointer;border-radius:14px}
+.li:last-child{border-bottom:0}
+.li:hover{background:var(--haze3)}
+.av{width:36px;height:36px;border-radius:50%;background:var(--haze3);border:1px solid var(--line);display:grid;place-items:center;font-weight:700;font-size:12px;color:var(--cobalt);flex:none}
+.li .m{flex:1;min-width:0}
+.li .m b{display:block;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.li .m span{font-size:12px;color:var(--muted)}
+.li .r{text-align:right;font-size:12.5px;font-weight:700;flex:none;max-width:45%}
+.li .r small{display:block;font-weight:500;color:var(--muted);font-size:11.5px}
+.li.first{background:#fff7f1;border:1px solid #fbd9c4;margin-bottom:4px}
+.sal{color:var(--orange-text)}
+.empty{color:var(--muted);font-size:13.5px;padding:24px 0;text-align:center}
+
+/* chips (hazard toggles) */
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:5px 11px;font-size:12.5px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;user-select:none;color:var(--navy)}
+.chip i{width:9px;height:9px;border-radius:3px;display:inline-block}
+.chip.off{opacity:.4}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12.5px;color:var(--navy);margin-top:10px}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:6px;vertical-align:0}
+
+/* tables */
+table{width:100%;border-collapse:separate;border-spacing:0;font-size:13.5px}
+th{text-align:left;font-weight:600;color:var(--muted);font-size:12.5px;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;background:#fff}
+td{padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+td.n,th.n{text-align:right}
+.cls{display:inline-block;font-size:11.5px;font-weight:700;border-radius:999px;padding:3px 9px;white-space:nowrap}
+.cls.c1{background:var(--ink);color:#fff}.cls.c2{background:var(--wire);color:#fff}.cls.c3{background:var(--haze2);color:var(--navy)}
+.hz{display:inline-block;font-size:12px;font-weight:600;border-radius:999px;padding:3px 9px;background:var(--haze3);color:var(--navy);border:1px solid var(--line);white-space:nowrap}
+.hz.s{background:#fff4ec;border-color:#fbd9c4;color:var(--orange-text)}
+#tbl th{cursor:pointer;position:sticky;top:0;z-index:1}
+#tbl th:hover{color:var(--ink)}
+#tbl th .ar{color:var(--cobalt)}
+tr.ev{cursor:pointer}
+tr.ev:hover td{background:var(--haze3)}
+tr.ev.open td{background:var(--haze3)}
+tr.detail td{background:var(--haze3);font-size:13px;color:var(--navy);padding-top:0}
+tr.detail ul{margin:6px 0 0;padding-left:18px}
 .filters{display:grid;grid-template-columns:2fr repeat(5,1fr);gap:8px;margin-bottom:12px}
-.filters input,.filters select{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;font-size:13.5px;background:#fff}
-.heat td{padding:0;border:none}
-.heat .cell{height:40px;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:13px;border-radius:6px;margin:2px;cursor:pointer}
-.heat th{cursor:default;text-align:center;white-space:normal;border:none;font-size:11px}
-.heat td.rh{font-size:13px;padding-right:10px;white-space:nowrap;text-align:right}
-ul.take{padding-left:18px;margin:6px 0}
-ul.take li{margin:6px 0}
-.case-note{font-size:12.5px;color:var(--muted)}
-footer{padding:36px 0 60px;color:var(--muted);font-size:13px}
-code{background:#eef1f5;padding:1px 5px;border-radius:4px;font-size:12.5px}
-@media(max-width:900px){.grid2,.grid2b{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}.filters{grid-template-columns:1fr 1fr}h1{font-size:32px}}
+.filters input,.filters select{width:100%;padding:9px 14px;border:1px solid var(--line);border-radius:999px;font:inherit;font-size:13px;background:#fff;color:var(--ink);appearance:none;-webkit-appearance:none}
+.filters select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%235d6b86' stroke-width='1.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:28px}
+.filters input:focus,.filters select:focus{outline:2px solid var(--haze);border-color:var(--cobalt)}
+.count{font-size:13px;color:var(--muted);margin:0 0 6px}
+.tablebox{max-height:680px;overflow:auto}
+
+/* hazard grid */
+.grid td{padding:2px;border:0}
+.grid th{border:0;text-align:center;white-space:normal;font-size:11.5px;vertical-align:bottom;padding:4px}
+.grid td.rh{font-size:12.5px;padding-right:10px;white-space:nowrap;text-align:right;vertical-align:middle;color:var(--navy)}
+.grid .cell{height:38px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12.5px;border-radius:10px;cursor:pointer;min-width:44px}
+.grid .cell:hover{outline:2px solid var(--ink)}
+
+/* about */
+.about ul{margin:6px 0;padding-left:18px}.about li{margin:8px 0}
+.about p{margin:0 0 12px}
+code{background:var(--haze3);border:1px solid var(--line);padding:1px 5px;border-radius:6px;font-size:12.5px}
+footer{color:var(--muted);font-size:12.5px;margin:20px 4px 0}
+
+.tt{position:fixed;pointer-events:none;background:var(--ink);color:#fff;font-size:12.5px;padding:9px 12px;border-radius:12px;max-width:340px;z-index:50;display:none;box-shadow:0 8px 24px rgba(29,36,51,.25);line-height:1.45}
+.tt .m{color:#aebbd4}
+section.tab{display:none}
+section.tab.on{display:block}
+:focus-visible{outline:2px solid var(--cobalt);outline-offset:2px}
+
+@media (max-width:1000px){
+  .hd{flex-wrap:wrap}.nav{order:3;margin:0;width:100%}.right{margin-left:auto}
+  .g1,.g3{grid-template-columns:1fr}
+}
+@media (max-width:760px){
+  .shell{margin:0;border-radius:0;padding:14px 16px 24px}
+  .g2{grid-template-columns:1fr}
+  .hero{grid-template-columns:1fr}
+  .hello h1,.hello h2{font-size:23px}
+  .big{font-size:46px}
+  .pill .lbl{display:none}
+  .filters{grid-template-columns:1fr 1fr}.filters input{grid-column:1/-1}
+  .card{padding:18px 16px}
+}
 </style>
 </head>
 <body>
-<header>
- <div class="wrap">
-  <div class="eyebrow">Pet food recalls · FDA data</div>
-  <h1>Which hazards keep coming back in pet food, and how long do recalls take?</h1>
-  <p class="dek">Every dog food, cat food, pet treat and pet supplement recall in FDA's Enforcement Report since 2003, plus dated timelines for nine outbreaks from FDA and CDC records.</p>
-  <div class="prov" id="prov"></div>
-  <div class="live" id="live"><span class="dot"></span><span id="liveTxt"></span></div>
-  <div class="kpis" id="kpis"></div>
-  <div class="spark"><div class="lbl">Pet food recall events per year, by recall start date (hover for detail)</div><div id="spark"></div></div>
- </div>
-</header>
-<nav class="toc"><div class="wrap">
- <a href="#latest">Latest recalls</a><a href="#recur">1 · Recurring hazards</a><a href="#cluster">2 · Hazard × product clusters</a><a href="#time">3 · Time to recall</a><a href="#repeat">4 · Repeat recalls</a><a href="#explore">5 · Explore every recall</a><a href="#qfs">6 · QFS takeaways</a><a href="#method">Methods</a>
-</div></nav>
+<div class="shell">
+ <header class="hd">
+  <a class="logo" href="#overview"><i><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><g fill="#fff"><ellipse cx="10" cy="13" rx="4.2" ry="3.6"/><circle cx="4.5" cy="8.5" r="1.8"/><circle cx="8" cy="5" r="1.8"/><circle cx="12" cy="5" r="1.8"/><circle cx="15.5" cy="8.5" r="1.8"/></g></svg></i>Pet food recalls</a>
+  <nav class="nav" id="nav" aria-label="Sections">
+   <a href="#overview">Overview</a><a href="#hazards">Hazards</a><a href="#product-types">Product types</a><a href="#time-to-recall">Time to recall</a><a href="#repeat-recalls">Repeat recalls</a><a href="#all-recalls">All recalls</a><a href="#about">About the data</a>
+  </nav>
+  <div class="right"><span class="pill" title="Updates every Monday"><span class="d"></span><span class="lbl">Data through</span><span id="thru"></span></span><button class="circ" id="searchBtn" aria-label="Search all recalls"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#1d2433" stroke-width="1.8"><circle cx="7" cy="7" r="5"/><path d="M11 11l3.5 3.5"/></svg></button></div>
+ </header>
 
-<main class="wrap">
+ <!-- ===== Overview ===== -->
+ <section class="tab" id="tab-overview">
+  <div class="hello">
+   <div><h1 id="ovTitle"></h1><p>Every dog food, cat food, pet treat and supplement recall in FDA's Enforcement Report. Updated every Monday.</p></div>
+   <div class="seg" id="species" role="group" aria-label="Pet"><button data-s="" class="on">Dogs &amp; cats</button><button data-s="Dog">Dogs</button><button data-s="Cat">Cats</button></div>
+  </div>
+  <div class="g1">
+   <div class="card">
+    <div class="ct"><h3><span class="ic"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#1d2433" stroke-width="1.6"><path d="M2 14V7M6 14V3M10 14V9M14 14V5"/></svg></span>Recall events</h3>
+     <div class="seg sm" id="yrRange"><button data-r="10" class="on">Last 10 years</button><button data-r="all">All years</button></div></div>
+    <div class="hero">
+     <div><div class="big" id="ovTotal"></div><div class="k sub" id="ovTotalSub"></div>
+      <div class="yr"><span class="sub">Last 12 months</span><div><b id="ov12"></b><span class="tag" id="ovYtd"></span></div></div></div>
+     <div id="ovYears"></div>
+    </div>
+   </div>
+   <div class="card blue">
+    <svg class="deco" width="220" height="220" viewBox="0 0 20 20" aria-hidden="true"><g fill="#fff"><ellipse cx="10" cy="13" rx="4.2" ry="3.6"/><circle cx="4.5" cy="8.5" r="1.8"/><circle cx="8" cy="5" r="1.8"/><circle cx="12" cy="5" r="1.8"/><circle cx="15.5" cy="8.5" r="1.8"/></g></svg>
+    <span class="label">Biggest finding</span>
+    <div class="big" id="ovSal"></div>
+    <p id="ovSalTxt"></p>
+    <div class="tiles"><div><b id="ovC1"></b><span>Class I, the most serious</span></div><div><b id="ovLag"></b><span>median wait for FDA to classify a recall</span></div></div>
+   </div>
+  </div>
+  <div class="g3">
+   <div class="card">
+    <div class="ct"><h3><span class="ic"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#1d2433" stroke-width="1.6"><circle cx="8" cy="8" r="6"/><path d="M8 2v6l4 3"/></svg></span>Hazards</h3><a class="mini" href="#hazards">All years</a></div>
+    <div id="ovRing" style="display:flex;justify-content:center"></div>
+    <div id="ovCallout"></div>
+    <div class="leg" id="ovLeg"></div>
+   </div>
+   <div class="card">
+    <div class="ct"><h3><span class="ic"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#1d2433" stroke-width="1.6"><rect x="2" y="4" width="12" height="10" rx="2"/><path d="M5 4V2h6v2"/></svg></span>Product types</h3><a class="mini" href="#product-types">Since 2018</a></div>
+    <div id="ovTypes"></div>
+   </div>
+   <div class="card">
+    <div class="ct"><h3><span class="ic"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#1d2433" stroke-width="1.6"><path d="M3 3h10v10H3zM5.5 6h5M5.5 8.5h5M5.5 11h3"/></svg></span>Latest recalls</h3><a class="mini" href="#all-recalls">See all</a></div>
+    <div id="ovLatest"></div>
+   </div>
+  </div>
+ </section>
 
-<section id="latest">
- <div class="q">Updated weekly</div>
- <h2>Latest pet food recalls</h2>
- <p class="lede">The six newest recall events in FDA's Enforcement Report. This page downloads new FDA data every Monday. Click a card to open it in the table at the bottom.</p>
- <div class="newstats" id="newstats"></div>
- <div class="latest" id="latestCards"></div>
-</section>
+ <!-- ===== Hazards ===== -->
+ <section class="tab" id="tab-hazards">
+  <div class="hello"><div><h2>Which hazards keep coming back?</h2><p id="f-recur"></p></div></div>
+  <div class="card">
+   <div class="ct"><h3>Recall events per year, by hazard</h3><div class="chips" id="hzChips"></div><p>Counted by the year the company started the recall. Click a bar to see those recalls.</p></div>
+   <div id="hzYears"></div>
+  </div>
+  <div class="g2">
+   <div class="card"><div class="ct"><h3>Salmonella's share of recall events</h3><p>By five-year period</p></div><div id="salShare"></div></div>
+   <div class="card"><div class="ct"><h3>Products per recall</h3><p>Average number of products in one recall event. Ingredient problems spread across many brands at once.</p></div><div id="perEvent"></div></div>
+  </div>
+  <div class="card">
+   <div class="ct"><h3>Every hazard</h3><p>"Active years" counts years with at least one recall. "Repeat firms" are companies with two or more recalls for that hazard.</p></div>
+   <div class="scroll" id="recurTable"></div>
+  </div>
+ </section>
 
-<section id="recur">
- <div class="q">Question 1</div>
- <h2>Which hazards recur?</h2>
- <p class="lede">Each bar counts recall events by the year the company started the recall. One event can cover dozens of products. Click a hazard to hide or show it.</p>
- <div class="finding" id="f-recur"></div>
- <div class="card">
-  <div class="chips" id="hzChips"></div>
-  <div id="yearChart"></div>
- </div>
- <div class="grid2b">
-  <div class="card">
-   <h3 class="ct">Chronic vs burst hazards</h3>
-   <p class="small" style="margin:0 0 6px">x = years with at least one recall · y = products per recall event (log) · bubble = number of events</p>
-   <div id="bubble"></div>
+ <!-- ===== Product types ===== -->
+ <section class="tab" id="tab-product-types">
+  <div class="hello"><div><h2>Which products go with which hazards?</h2><p id="f-cluster"></p></div></div>
+  <div class="g2">
+   <div class="card"><div class="ct"><h3>Hazard by product type</h3><p>Recall events. Darker means more. Click a square to see those recalls.</p></div><div class="scroll" id="heat"></div></div>
+   <div class="card"><div class="ct"><h3>Product type mix over time</h3><p>Share of recall events in each period</p></div><div id="catShift"></div></div>
   </div>
-  <div class="card">
-   <h3 class="ct">Salmonella's share of recall events</h3>
-   <p class="small" style="margin:0 0 6px">Salmonella events as % of all pet food recall events, by five-year window</p>
-   <div id="salShare"></div>
+  <div class="g2">
+   <div class="card"><div class="ct"><h3>Which pets each hazard hits</h3><p>Share of recall events by the pet on the label (hazards with 5 or more events)</p></div><div id="speciesChart"></div></div>
+   <div class="card"><div class="ct"><h3>How serious, by product type</h3><p>Class I: could cause serious harm or death. Class II: temporary or reversible harm. Class III: unlikely to cause harm.</p></div><div id="severity"></div></div>
   </div>
- </div>
- <div class="card">
-  <h3 style="margin:0 0 8px;font-family:var(--serif);font-weight:500">Every hazard, by number of recall events</h3>
-  <div id="recurTable"></div>
-  <p class="small" style="margin-top:8px">"Active years" = distinct calendar years with at least one recall event for that hazard. "Repeat firms" = companies with 2 or more recall events for that hazard.</p>
- </div>
-</section>
+ </section>
 
-<section id="cluster">
- <div class="q">Question 2</div>
- <h2>Which product categories cluster with which hazards?</h2>
- <p class="lede">Recall events by hazard (rows) and product format (columns). Darker = more events. Click a cell to load those recalls in the explorer.</p>
- <div class="finding" id="f-cluster"></div>
- <div class="grid2">
-  <div class="card"><div id="heat"></div></div>
+ <!-- ===== Time to recall ===== -->
+ <section class="tab" id="tab-time-to-recall">
+  <div class="hello"><div><h2>How long between the first warning sign and a recall?</h2><p id="f-time"></p></div></div>
   <div class="card">
-   <h3 style="margin:0 0 4px;font-family:var(--serif);font-weight:500">Product format mix over time</h3>
-   <p class="small" style="margin:0 0 8px">Share of recall events per period</p>
-   <div id="catShift"></div>
+   <div class="ct"><h3>First warning sign to first recall</h3><p>The 9 outbreaks where FDA or CDC records date the first complaint, illness or positive test. Log scale. Hover a bar for the evidence.</p></div>
+   <div class="scroll"><div id="cases" style="min-width:680px"></div></div>
+   <div id="caseNotes" class="note"></div>
   </div>
- </div>
- <div class="grid2b">
-  <div class="card">
-   <h3 class="ct">Which species each hazard hits</h3>
-   <p class="small" style="margin:0 0 6px">Share of recall events by species on the label (hazards with 5+ events)</p>
-   <div id="speciesChart"></div>
+  <div class="g2">
+   <div class="card"><div class="ct"><h3>Days for FDA to classify a recall, by year</h3><p>Median days from the company starting the recall to FDA classifying it. A recall appears in FDA's public report once it's classified.</p></div><div id="lagYear"></div></div>
+   <div class="card"><div class="ct"><h3>Days for FDA to classify, by hazard</h3><p>Median days, hazards with 3 or more recalls</p></div><div id="lagHaz"></div></div>
   </div>
-  <div class="card">
-   <h3 class="ct">Recall severity by product type</h3>
-   <p class="small" style="margin:0 0 6px">FDA recall class: I = reasonable probability of serious harm or death; II = temporary or reversible harm; III = unlikely to cause harm</p>
-   <div id="severity"></div>
-  </div>
- </div>
-</section>
+  <div class="card"><div class="ct"><h3>How long classification took, before and since 2020</h3><p>Share of recall events in each time band</p></div><div id="lagHist"></div></div>
+ </section>
 
-<section id="time">
- <div class="q">Question 3</div>
- <h2>How long between the first warning sign and a recall?</h2>
- <p class="lede">Chart (a) covers nine outbreaks where FDA or CDC records give a date for the first complaint, illness or positive test, and measures from that date to the first recall. Charts (b) cover every recall and measure how long FDA took to classify it after the company started it. A recall shows up in FDA's public Enforcement Report once it's classified.</p>
- <div class="finding" id="f-time"></div>
- <div class="card">
-  <h3 style="margin:0 0 4px;font-family:var(--serif);font-weight:500">(a) First signal → first recall, documented outbreaks</h3>
-  <p class="small" style="margin:0 0 10px">Log scale. Hover a bar for the evidence and source.</p>
-  <div id="cases"></div>
-  <div id="caseNotes" class="case-note"></div>
- </div>
- <div class="grid2b">
+ <!-- ===== Repeat recalls ===== -->
+ <section class="tab" id="tab-repeat-recalls">
+  <div class="hello"><div><h2>Who recalls for the same hazard more than once?</h2><p id="f-repeat"></p></div></div>
   <div class="card">
-   <h3 style="margin:0 0 4px;font-family:var(--serif);font-weight:500">(b) Recall start → FDA classification, median days by year</h3>
-   <div id="lagYear"></div>
+   <div class="ct"><h3>Repeat recalls for the same hazard</h3><button class="mini" id="repTog"></button><p id="repNote"></p></div>
+   <div class="scroll"><div id="repeatChart" style="min-width:680px"></div></div>
   </div>
   <div class="card">
-   <h3 style="margin:0 0 4px;font-family:var(--serif);font-weight:500">(b) Median classification lag by hazard</h3>
-   <div id="lagHaz"></div>
-  </div>
- </div>
- <div class="card">
-  <h3 class="ct">(b) Distribution of FDA classification lag, before vs since 2020</h3>
-  <p class="small" style="margin:0 0 6px">Share of recall events in each lag band</p>
-  <div id="lagHist"></div>
- </div>
-</section>
-
-<section id="repeat">
- <div class="q">Question 4</div>
- <h2>Who recalls for the same hazard more than once?</h2>
- <p class="lede">Companies that recalled products for the same hazard in two or more episodes at least 90 days apart. A second recall for the same hazard often means the first fix didn't reach the cause.</p>
- <div class="finding" id="f-repeat"></div>
- <div class="card"><div id="repeatChart"></div></div>
- <div class="grid2b">
-  <div class="card">
-   <h3 class="ct">Where recalling firms are based</h3>
-   <p class="small" style="margin:0 0 6px">Recall events by the recalling firm's state. Hover for the hazard mix.</p>
-   <div id="tilemap"></div>
-  </div>
-  <div class="card">
-   <h3 class="ct">Firms with the most recall events</h3>
-   <p class="small" style="margin:0 0 6px">All hazards since 2003, colored by hazard. Big manufacturers rank high partly because they sell thousands of products. The repeat chart above is a better way to spot problems that weren't fixed.</p>
+   <div class="ct"><h3>Companies with the most recall events</h3><p>All hazards since 2003. Big manufacturers rank high partly because they sell thousands of products, so the repeat chart above is a better way to spot problems that weren't fixed.</p></div>
    <div id="topFirms"></div>
   </div>
- </div>
-</section>
+ </section>
 
-<section id="explore">
- <div class="q">Explorer</div>
- <h2>Every pet food recall event</h2>
- <p class="lede">Search a brand, firm or ingredient. Click a row to see the affected products and FDA's stated reason.</p>
- <div class="card">
-  <div class="filters">
-   <input id="fq" placeholder="Search brand, firm, product, reason…">
-   <select id="fh"></select><select id="fc"></select><select id="fs"></select><select id="fk"></select><select id="fy"></select>
+ <!-- ===== All recalls ===== -->
+ <section class="tab" id="tab-all-recalls">
+  <div class="hello"><div><h2>Every pet food recall event</h2><p>Search a brand, company or ingredient. Click a row to see the recalled products and FDA's stated reason.</p></div></div>
+  <div class="card">
+   <div class="filters">
+    <input id="fq" type="search" placeholder="Search a brand, company, product or reason" aria-label="Search">
+    <select id="fh" aria-label="Hazard"></select><select id="fc" aria-label="Product type"></select><select id="fs" aria-label="Pet"></select><select id="fk" aria-label="Class"></select><select id="fy" aria-label="Year"></select>
+   </div>
+   <div class="count" id="count"></div>
+   <div class="tablebox"><table id="tbl"><thead><tr>
+    <th data-k="init">Started</th><th data-k="firm_n">Company</th><th data-k="hazard">Hazard</th><th data-k="category">Product type</th><th data-k="species">Pet</th><th data-k="cls">Class</th><th data-k="n" class="n">Products</th><th data-k="fda_lag" class="n">Days to classify</th>
+   </tr></thead><tbody></tbody></table></div>
   </div>
-  <div class="small" id="count" style="margin-bottom:6px"></div>
-  <div style="max-height:620px;overflow:auto"><table id="tbl"><thead><tr>
-   <th data-k="init">Recall start</th><th data-k="firm_n">Firm</th><th data-k="hazard">Hazard</th><th data-k="category">Format</th><th data-k="species">Species</th><th data-k="cls">Class</th><th data-k="n">Products</th><th data-k="fda_lag">FDA lag (d)</th>
-  </tr></thead><tbody></tbody></table></div>
- </div>
-</section>
+ </section>
 
-<section id="qfs">
- <div class="q">Recommendations</div>
- <h2>What a quality and food safety team could do with this</h2>
- <div class="card" id="takeaways"></div>
-</section>
+ <!-- ===== About ===== -->
+ <section class="tab about" id="tab-about">
+  <div class="hello"><div><h2>About the data</h2><p>Where the numbers come from, what they can't tell you, and what a quality and food safety team could do with them.</p></div></div>
+  <div class="card"><div class="ct"><h3>What a quality and food safety team could do with this</h3></div><div id="takeaways"></div></div>
+  <div class="card"><div class="ct"><h3>Methods and limits</h3></div><div id="methods"></div></div>
+ </section>
 
-<section id="method">
- <h2>Methods, data and limits</h2>
- <div class="card" id="methods"></div>
-</section>
-</main>
-<footer><div class="wrap" id="foot"></div></footer>
-<div class="tt" id="tt"></div>
+ <footer id="foot"></footer>
+</div>
+<div class="tt" id="tt" role="tooltip"></div>
 
 <script>
 const DATA = __DATA__;
 const E = DATA.events, R = DATA.records, CASES = DATA.cases || [], META = DATA.meta;
 const HZ = ["Salmonella","Listeria","E. coli / other pathogen","Aflatoxin / mycotoxin","Vitamin D excess","Nutrient deficiency / excess","Melamine / cyanuric acid","Pentobarbital","Thyroid hormone","H5N1 avian influenza","Chemical / drug residue","Mold / spoilage","Foreign material","Labeling / undeclared / unapproved"];
-const COL = {"Salmonella":"#c2410c","Listeria":"#e11d48","E. coli / other pathogen":"#fb7185","Aflatoxin / mycotoxin":"#a16207","Vitamin D excess":"#7c3aed","Nutrient deficiency / excess":"#a78bfa","Melamine / cyanuric acid":"#0f766e","Pentobarbital":"#334155","Thyroid hormone":"#0891b2","H5N1 avian influenza":"#be185d","Chemical / drug residue":"#64748b","Mold / spoilage":"#65a30d","Foreign material":"#94a3b8","Labeling / undeclared / unapproved":"#cbd5e1"};
+// Five hazard groups instead of 14 colors: Salmonella stands out, the rest stay in the blues.
+const GROUPS = [
+ {k:"Salmonella",c:"#2364f0",hz:["Salmonella"]},
+ {k:"Other germs",c:"#2b3a55",hz:["Listeria","E. coli / other pathogen","H5N1 avian influenza"]},
+ {k:"Toxins and chemicals",c:"#7c98c8",hz:["Aflatoxin / mycotoxin","Melamine / cyanuric acid","Pentobarbital","Chemical / drug residue"]},
+ {k:"Vitamins, minerals, hormones",c:"#b4ccea",hz:["Vitamin D excess","Nutrient deficiency / excess","Thyroid hormone"]},
+ {k:"Mold, objects, labels",c:"#dbe3ee",hz:["Mold / spoilage","Foreign material","Labeling / undeclared / unapproved"]}];
+const GROUP_OF = {}; GROUPS.forEach(g=>g.hz.forEach(h=>GROUP_OF[h]=g));
+const hcol = h => (GROUP_OF[h]||GROUPS[4]).c;
 const CATS = ["Dry kibble","Wet / canned","Raw / frozen / freeze-dried","Treats & chews","Supplements","Other / unspecified"];
+const CAT_SHORT = {"Dry kibble":"Dry","Wet / canned":"Canned","Raw / frozen / freeze-dried":"Raw","Treats & chews":"Treats","Supplements":"Supplement","Other / unspecified":"Other"};
+const CAT_LABEL = {"Dry kibble":"Dry kibble","Wet / canned":"Canned","Raw / frozen / freeze-dried":"Raw, frozen, freeze-dried","Treats & chews":"Treats & chews","Supplements":"Supplements","Other / unspecified":"Other"};
+const CAT_COL = {"Raw / frozen / freeze-dried":"#2364f0","Dry kibble":"#2b3a55","Treats & chews":"#7c98c8","Wet / canned":"#b4ccea","Supplements":"#d6e6f5","Other / unspecified":"#e6ebf2"};
+const short = h => h.split(" /")[0];
+
 const $ = s => document.querySelector(s);
 const tt = $("#tt");
-function tip(e,html){tt.innerHTML=html;tt.style.display="block";const x=Math.min(e.clientX+14,innerWidth-360);tt.style.left=x+"px";tt.style.top=(e.clientY+14)+"px";}
+function tip(e,html){tt.innerHTML=html;tt.style.display="block";const x=Math.min(e.clientX+14,innerWidth-360);const y=Math.min(e.clientY+14,innerHeight-tt.offsetHeight-8);tt.style.left=Math.max(8,x)+"px";tt.style.top=y+"px";}
 function untip(){tt.style.display="none";}
+addEventListener("scroll",untip,{passive:true});
 const median = a => {if(!a.length) return null; const s=[...a].sort((x,y)=>x-y), m=s.length>>1; return s.length%2?s[m]:(s[m-1]+s[m])/2;};
-const fmt = n => n.toLocaleString();
+const fmt = n => n.toLocaleString("en-US");
+const pct = (a,b) => b ? Math.round(100*a/b)+"%" : "–";
 const esc = s => String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const NS="http://www.w3.org/2000/svg";
 function el(tag,attrs={},parent){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e;}
-
-// ---------- header ----------
+function txt(parent,x,y,s,a={}){const t=el("text",Object.assign({x,y,"font-size":11.5,fill:"#5d6b86"},a),parent);t.textContent=s;return t;}
+function svgIn(box,W,H){box.innerHTML="";return el("svg",{width:W,height:H,viewBox:`0 0 ${W} ${H}`,role:"img"},box);}
+function niceStep(max,ticks=4){const raw=max/ticks,p=Math.pow(10,Math.floor(Math.log10(raw))),n=raw/p;return (n<=1?1:n<=2?2:n<=5?5:10)*p;}
+const MONTHS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const nice = d => {if(!d)return "–";const [y,m,dd]=d.split("-");return `${MONTHS[+m-1]} ${+dd}, ${y}`;};
+const niceShort = d => {const [,m,dd]=d.split("-");return `${MONTHS[+m-1]} ${+dd}`;};
+const ASOF = new Date(META.data_through+"T00:00:00");
+const daysAgo = d => Math.round((ASOF-new Date(d+"T00:00:00"))/864e5);
 const years = E.map(e=>e.year).filter(Boolean);
-const lagsAll = E.map(e=>e.fda_lag).filter(v=>v!=null&&v>=0);
-const cls1 = E.filter(e=>e.cls==="Class I").length;
-const sal = E.filter(e=>e.hazard==="Salmonella").length;
-$("#liveTxt").textContent = `Updates every Monday from FDA · data through ${META.data_through_label}`;
-$("#prov").innerHTML = `Data: FDA Enforcement Report (product type "Veterinary"), through ${META.data_through_label}; ${fmt(R.length)} recalled pet products in ${fmt(E.length)} recall events, ${Math.min(...years)}–${Math.max(...years)}. Outbreak timelines from FDA CVM, CDC and FDA warning letters (sources linked).`;
-$("#kpis").innerHTML = [
- [fmt(E.length),"pet food recall events"],[fmt(R.length),"recalled products (SKUs)"],
- [Math.round(100*sal/E.length)+"%","of events are Salmonella"],[Math.round(100*cls1/E.length)+"%","are Class I (serious risk)"],
- [Math.round(median(lagsAll))+" d","median days for FDA to classify a recall"]
-].map(([b,s])=>`<div class="kpi"><b>${b}</b><span>${s}</span></div>`).join("");
+const Y0 = Math.min(...years), Y1 = Math.max(...years), THIS_YEAR = ASOF.getFullYear();
+const initials = s => s.split(/\s+/).filter(w=>/^[A-Za-z0-9]/.test(w)).slice(0,2).map(w=>w[0].toUpperCase()).join("");
+const petLabel = s => ({"Dog":"dog","Cat":"cat","Dog & cat":"dog & cat"}[s]||"");
+const clsClass = c => c==="Class I"?"c1":c==="Class II"?"c2":"c3";
 
-// ---------- Q1 stacked years ----------
-const hzOn = new Set(HZ);
-function drawChips(){
- $("#hzChips").innerHTML = HZ.filter(h=>E.some(e=>e.hazard===h)).map(h=>`<span class="chip ${hzOn.has(h)?"":"off"}" data-h="${esc(h)}"><i style="background:${COL[h]}"></i>${esc(h)}</span>`).join("")+
- `<span class="chip" data-h="__only">Headline hazards only</span><span class="chip" data-h="__all">All</span>`;
- document.querySelectorAll("#hzChips .chip").forEach(c=>c.onclick=()=>{const h=c.dataset.h;
-  if(h==="__all"){HZ.forEach(x=>hzOn.add(x));}
-  else if(h==="__only"){hzOn.clear();["Salmonella","Listeria","Aflatoxin / mycotoxin","Vitamin D excess","Melamine / cyanuric acid","Pentobarbital","Thyroid hormone","H5N1 avian influenza"].forEach(x=>hzOn.add(x));}
-  else hzOn.has(h)?hzOn.delete(h):hzOn.add(h);
-  drawChips();drawYears();});
-}
-function drawYears(){
- const box=$("#yearChart");box.innerHTML="";
- const y0=Math.min(...years), y1=Math.max(...years), W=box.clientWidth||1100, H=300, m={l:34,r:10,t:10,b:28};
- const ys=[];for(let y=y0;y<=y1;y++)ys.push(y);
- const stacks=ys.map(y=>{let acc=0;return HZ.filter(h=>hzOn.has(h)).map(h=>{const n=E.filter(e=>e.year===y&&e.hazard===h).length;const s={y,h,n,a:acc};acc+=n;return s;});});
- const maxv=Math.max(1,...stacks.map(s=>s.reduce((a,b)=>a+b.n,0)));
- const svg=el("svg",{width:W,height:H},box);
- const bw=(W-m.l-m.r)/ys.length, sy=v=>H-m.b-(H-m.t-m.b)*v/maxv;
- for(let g=0;g<=maxv;g+=Math.ceil(maxv/5)){el("line",{x1:m.l,x2:W-m.r,y1:sy(g),y2:sy(g),stroke:"#eef0f3"},svg);el("text",{x:m.l-6,y:sy(g)+4,"text-anchor":"end","font-size":11,fill:"#8a93a3"},svg).textContent=g;}
- stacks.forEach((st,i)=>{st.forEach(s=>{if(!s.n)return;const r=el("rect",{x:m.l+i*bw+2,width:bw-4,y:sy(s.a+s.n),height:sy(s.a)-sy(s.a+s.n),fill:COL[s.h],rx:2},svg);
-   r.onmousemove=e=>{const ev=E.filter(x=>x.year===s.y&&x.hazard===s.h);tip(e,`<b>${s.y} · ${esc(s.h)}</b><br>${s.n} recall event${s.n>1?"s":""}, ${ev.reduce((a,b)=>a+b.n,0)} products<br><span style="color:#9fb0c2">${esc([...new Set(ev.map(x=>x.firm_n))].slice(0,5).join(", "))}</span>`);};r.onmouseleave=untip;
-   r.onclick=()=>{setFilters({h:s.h,y:String(s.y)});};});
-  if(ys[i]===new Date(META.data_through+"T00:00:00").getFullYear()){const tot=st.reduce((a,b)=>a+b.n,0);el("text",{x:m.l+i*bw+bw/2,y:sy(tot)-5,"text-anchor":"middle","font-size":10,fill:"#8a93a3","font-style":"italic"},svg).textContent="to date";}
-  if(ys.length<=30||i%2===0)el("text",{x:m.l+i*bw+bw/2,y:H-10,"text-anchor":"middle","font-size":10.5,fill:"#5f6878"},svg).textContent=String(ys[i]).slice(-2)==="00"?ys[i]:"'"+String(ys[i]).slice(-2);
+$("#thru").textContent = META.data_through_label;
+
+// ================= Overview =================
+let SPECIES = "", YR_RANGE = "10";
+const forSpecies = () => SPECIES ? E.filter(e=>e.species===SPECIES||e.species==="Dog & cat") : E;
+
+function ovYears(ev){
+ const box=$("#ovYears"); const from = YR_RANGE==="all"?Y0:Math.max(Y0,Y1-9);
+ const ys=[];for(let y=from;y<=Y1;y++)ys.push({y,n:ev.filter(e=>e.year===y).length});
+ const W=Math.max(280,box.clientWidth||560),H=220,m={l:30,r:6,t:32,b:26};
+ const svg=svgIn(box,W,H);const mx=Math.max(4,...ys.map(d=>d.n));const st=niceStep(mx);const top=Math.ceil(mx/st)*st;
+ const iw=W-m.l-m.r,ih=H-m.t-m.b,bw=iw/ys.length,pad=Math.min(12,bw*.28),sy=v=>m.t+ih-ih*v/top;
+ for(let g=0;g<=top;g+=st){el("line",{x1:m.l,x2:W-m.r,y1:sy(g),y2:sy(g),stroke:"#e6ecf4","stroke-dasharray":g?"4 4":""},svg);txt(svg,m.l-8,sy(g)+4,g,{"text-anchor":"end","font-size":11});}
+ const peak=ys.reduce((a,b)=>b.n>a.n?b:a,ys[0]);
+ ys.forEach((d,i)=>{const x=m.l+i*bw+pad/2,w=bw-pad,h=sy(0)-sy(d.n),cur=d.y===THIS_YEAR,hi=d===peak&&d.n>0;
+  const r=el("rect",{x,y:sy(d.n),width:w,height:Math.max(h,0),rx:Math.min(10,w/2.4),fill:hi?"#2364f0":cur?"#b4ccea":"#d6e6f5",style:"cursor:pointer"},svg);
+  r.onmousemove=e=>{const hz={};ev.filter(x=>x.year===d.y).forEach(x=>hz[x.hazard]=(hz[x.hazard]||0)+1);tip(e,`<b>${d.y}${cur?" so far":""}</b><br>${d.n} recall event${d.n===1?"":"s"}<br><span class="m">${Object.entries(hz).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([h,n])=>`${esc(short(h))}: ${n}`).join("<br>")}</span>`);};
+  r.onmouseleave=untip;r.onclick=()=>{untip();goFilter({y:String(d.y),s:SPECIES});};
+  if(hi){const lw=d.n>=100?76:66,cx=x+w/2;el("rect",{x:cx-lw/2,y:sy(d.n)-26,width:lw,height:20,rx:10,fill:"#1d2433"},svg);txt(svg,cx,sy(d.n)-12,`${d.n} · peak`,{"text-anchor":"middle","font-size":11,"font-weight":700,fill:"#fff"});}
+  const show = ys.length<=12 || d.y%5===0 || i===ys.length-1;
+  if(show)txt(svg,x+w/2,H-7,(ys.length<=12?"’"+String(d.y).slice(2):d.y)+(cur?"*":""),{"text-anchor":"middle",fill:hi?"#1d2433":"#5d6b86","font-weight":hi?700:500});
  });
+ box.insertAdjacentHTML("beforeend",`<div class="sub" style="font-size:11.5px;text-align:right">*${THIS_YEAR} so far</div>`);
 }
+
+function ovRing(ev){
+ const cnt={};ev.forEach(e=>cnt[e.hazard]=(cnt[e.hazard]||0)+1);
+ const top=Object.entries(cnt).sort((a,b)=>b[1]-a[1]).slice(0,4);
+ const cols=["#2364f0","#7c98c8","#b4ccea","#d6e6f5"];
+ const segs=top.map(([h,n],i)=>({h,n,c:cols[i]}));
+ // the burst-hazard callout: a hazard whose recalls all fell in one year
+ const burst=Object.entries(cnt).filter(([h,n])=>n>=5&&!top.some(t=>t[0]===h)).map(([h,n])=>({h,n,ys:[...new Set(ev.filter(e=>e.hazard===h).map(e=>e.year))]})).filter(b=>b.ys.length===1).sort((a,b)=>b.n-a.n)[0];
+ if(burst)segs.push({h:burst.h,n:burst.n,c:"#f26a21"});
+ const used=segs.reduce((a,s)=>a+s.n,0);if(ev.length-used>0)segs.push({h:"Everything else",n:ev.length-used,c:"#e6ebf2"});
+ const r=74,C=2*Math.PI*r,gap=segs.length>1?4:0;let off=0;
+ let s=`<svg width="190" height="190" viewBox="0 0 190 190" role="img" aria-label="Recall events by hazard"><g transform="rotate(-90 95 95)">`;
+ segs.forEach(g=>{const L=C*g.n/ev.length;s+=`<circle cx="95" cy="95" r="${r}" fill="none" stroke="${g.c}" stroke-width="18" stroke-dasharray="${Math.max(L-gap,0.5)} ${C}" stroke-dashoffset="${-off}"><title>${esc(g.h)}: ${g.n}</title></circle>`;off+=L;});
+ const first=segs[0];
+ s+=`</g><text x="95" y="94" font-size="28" font-weight="700" text-anchor="middle" fill="#1d2433">${first?pct(first.n,ev.length):"–"}</text><text x="95" y="114" font-size="12" text-anchor="middle" fill="#5d6b86">${first?esc(short(first.h)):""}</text></svg>`;
+ $("#ovRing").innerHTML=s;
+ $("#ovCallout").innerHTML=burst?`<div class="callout">${esc(short(burst.h))}: all ${burst.n} recalls in <em>${burst.ys[0]}</em></div>`:"";
+ $("#ovLeg").innerHTML=segs.map(g=>`<div><i style="background:${g.c}"></i><span>${esc(short(g.h))}</span><b>${g.n}</b></div>`).join("");
+}
+
+function ovTypes(ev){
+ const recent=ev.filter(e=>e.year>=2018);
+ if(!recent.length){$("#ovTypes").innerHTML=`<div class="empty">No recalls since 2018.</div>`;return;}
+ const rows=CATS.map(c=>({c,n:recent.filter(e=>e.category===c).length})).filter(r=>r.n&&r.c!=="Other / unspecified").sort((a,b)=>b.n-a.n);
+ const mx=rows[0].n/recent.length*100;
+ $("#ovTypes").innerHTML=`<div style="font-size:30px;font-weight:700;letter-spacing:-.01em">${pct(rows[0].n,recent.length)} <span class="sub" style="font-size:13px;font-weight:500">${esc(CAT_LABEL[rows[0].c].toLowerCase())}</span></div>
+ <div class="sub" style="margin-bottom:4px">More than any other type of the ${recent.length} recalls since 2018.</div>`+
+ rows.map((r,i)=>{const p=100*r.n/recent.length,w=Math.max(2,100*p/mx);return `<div class="pr ${i===0?"hi":""}"><div class="t"><span>${esc(CAT_LABEL[r.c])}</span><b>${Math.round(p)}%</b></div><div class="b"><i style="width:${w}%"></i>${i===0?`<span class="flag" style="left:${Math.min(w,92)}%">#1</span>`:""}</div></div>`;}).join("");
+}
+
+function ovLatest(ev){
+ const L=ev.filter(e=>e.init).sort((a,b)=>b.init.localeCompare(a.init)).slice(0,5);
+ $("#ovLatest").innerHTML=L.map((e,i)=>`<div class="li ${i===0?"first":""}" data-id="${esc(e.id)}" role="button" tabindex="0"><span class="av">${esc(initials(e.firm_n))}</span><div class="m"><b>${esc(e.firm_n)}</b><span>${esc(CAT_SHORT[e.category])}${petLabel(e.species)?" · "+petLabel(e.species):""}</span></div><div class="r ${e.hazard==="Salmonella"?"sal":""}">${esc(short(e.hazard))}<small>${niceShort(e.init)}${i===0?" · newest":""}</small></div></div>`).join("")||`<div class="empty">No recalls.</div>`;
+ document.querySelectorAll("#ovLatest .li").forEach(li=>{li.onclick=()=>openRecall(li.dataset.id);li.onkeydown=k=>{if(k.key==="Enter")openRecall(li.dataset.id);};});
+}
+
+function overview(){
+ const ev=forSpecies(); const pets=SPECIES?SPECIES.toLowerCase()+" food":"pet food";
+ $("#ovTitle").textContent=`US ${pets} recalls, ${Y0}–${Y1}`;
+ $("#ovTotal").textContent=fmt(ev.length);
+ $("#ovTotalSub").innerHTML=`recall events since ${Y0}<br>covering <b style="color:var(--ink)">${fmt(ev.reduce((a,b)=>a+b.n,0))}</b> products`;
+ $("#ov12").textContent=ev.filter(e=>e.init&&daysAgo(e.init)<=365).length;
+ $("#ovYtd").textContent=`${ev.filter(e=>e.year===THIS_YEAR).length} so far in ${THIS_YEAR}`;
+ const sal=ev.filter(e=>e.hazard==="Salmonella").length;
+ $("#ovSal").textContent=pct(sal,ev.length);
+ const eras=[[2008,2012],[2013,2017],[2018,2022],[2023,Y1]].map(p=>{const x=ev.filter(e=>e.year>=p[0]&&e.year<=p[1]);return x.length>=5?Math.round(100*x.filter(e=>e.hazard==="Salmonella").length/x.length):null;}).filter(v=>v!=null);
+ $("#ovSalTxt").textContent=`of recall events were Salmonella (${fmt(sal)} of ${fmt(ev.length)}).`+(eras.length>1?` Its share stayed between ${Math.min(...eras)}% and ${Math.max(...eras)}% in every five-year period since 2008.`:"");
+ $("#ovC1").textContent=pct(ev.filter(e=>e.cls==="Class I").length,ev.length);
+ const lg=median(ev.map(e=>e.fda_lag).filter(v=>v!=null&&v>=0));
+ $("#ovLag").textContent=lg==null?"–":Math.round(lg)+" days";
+ ovYears(ev);ovRing(ev);ovTypes(ev);ovLatest(ev);
+}
+document.querySelectorAll("#species button").forEach(b=>b.onclick=()=>{SPECIES=b.dataset.s;document.querySelectorAll("#species button").forEach(x=>x.classList.toggle("on",x===b));overview();});
+document.querySelectorAll("#yrRange button").forEach(b=>b.onclick=()=>{YR_RANGE=b.dataset.r;document.querySelectorAll("#yrRange button").forEach(x=>x.classList.toggle("on",x===b));ovYears(forSpecies());});
+
+// ================= Hazards =================
+const grpOn=new Set(GROUPS.map(g=>g.k));
+function hzChips(){
+ $("#hzChips").innerHTML=GROUPS.map(g=>`<span class="chip ${grpOn.has(g.k)?"":"off"}" data-g="${esc(g.k)}" role="button" tabindex="0"><i style="background:${g.c};${g.k==="Mold, objects, labels"?"box-shadow:inset 0 0 0 1px #c3cddc":""}"></i>${esc(g.k)}</span>`).join("");
+ document.querySelectorAll("#hzChips .chip").forEach(c=>{const f=()=>{const k=c.dataset.g;if(grpOn.has(k)&&grpOn.size>1)grpOn.delete(k);else grpOn.add(k);hzChips();hzYears();};c.onclick=f;c.onkeydown=e=>{if(e.key==="Enter")f();};});
+}
+function hzYears(){
+ const box=$("#hzYears");const ys=[];for(let y=Y0;y<=Y1;y++)ys.push(y);
+ const gs=GROUPS.filter(g=>grpOn.has(g.k));
+ const stacks=ys.map(y=>{let acc=0;return gs.map(g=>{const ev=E.filter(e=>e.year===y&&g.hz.includes(e.hazard));const s={y,g,ev,n:ev.length,a:acc};acc+=ev.length;return s;});});
+ const tots=stacks.map(s=>s.reduce((a,b)=>a+b.n,0));
+ const W=Math.max(320,box.clientWidth||1100),H=290,m={l:32,r:6,t:30,b:26};const svg=svgIn(box,W,H);
+ const mx=Math.max(4,...tots),st=niceStep(mx),top=Math.ceil(mx/st)*st,ih=H-m.t-m.b,bw=(W-m.l-m.r)/ys.length,pad=Math.min(8,bw*.25),sy=v=>m.t+ih-ih*v/top;
+ for(let g=0;g<=top;g+=st){el("line",{x1:m.l,x2:W-m.r,y1:sy(g),y2:sy(g),stroke:"#e6ecf4","stroke-dasharray":g?"4 4":""},svg);txt(svg,m.l-8,sy(g)+4,g,{"text-anchor":"end","font-size":11});}
+ stacks.forEach((st,i)=>{const x=m.l+i*bw+pad/2,w=bw-pad;
+  // rounded top on the whole stack via clip path
+  const id="c"+i,cp=el("clipPath",{id},svg);el("rect",{x,y:sy(tots[i]),width:w,height:sy(0)-sy(tots[i])+8,rx:Math.min(6,w/2.5)},cp);
+  const g=el("g",{"clip-path":`url(#${id})`},svg);
+  st.forEach(s=>{if(!s.n)return;const r=el("rect",{x,y:sy(s.a+s.n),width:w,height:sy(s.a)-sy(s.a+s.n),fill:s.g.c,stroke:"#fff","stroke-width":1,style:"cursor:pointer"},g);
+   r.onmousemove=e=>{const c={};s.ev.forEach(x=>c[x.hazard]=(c[x.hazard]||0)+1);tip(e,`<b>${s.y} · ${esc(s.g.k)}</b><br>${s.n} recall event${s.n>1?"s":""}<br><span class="m">${Object.entries(c).sort((a,b)=>b[1]-a[1]).map(([h,n])=>`${esc(short(h))}: ${n}`).join("<br>")}<br>${esc([...new Set(s.ev.map(x=>x.firm_n))].slice(0,4).join(", "))}</span>`);};
+   r.onmouseleave=untip;r.onclick=()=>{untip();goFilter({y:String(s.y),h:s.g.hz.length===1?s.g.hz[0]:""});};});
+  if(ys[i]%5===0||i===0||i===ys.length-1)txt(svg,x+w/2,H-7,ys[i]+(ys[i]===THIS_YEAR?"*":""),{"text-anchor":"middle"});
+ });
+ const ann=[[2007,"Melamine"],[2018,"Vitamin D, raw food"]];
+ ann.forEach(([y,t])=>{const i=ys.indexOf(y);if(i<0||!tots[i])return;const x=m.l+i*bw+bw/2,yy=sy(tots[i]);el("line",{x1:x,x2:x,y1:yy-4,y2:m.t-10,stroke:"#1d2433"},svg);txt(svg,x+5,m.t-13,t,{fill:"#1d2433","font-weight":600,"font-size":12});});
+ box.insertAdjacentHTML("beforeend",`<div class="sub" style="font-size:11.5px;text-align:right">*${THIS_YEAR} so far</div>`);
+}
+function salShare(){
+ const box=$("#salShare");const P=[[2003,2007],[2008,2012],[2013,2017],[2018,2022],[2023,Y1]];
+ const rows=P.map(p=>{const ev=E.filter(e=>e.year>=p[0]&&e.year<=p[1]);const s=ev.filter(e=>e.hazard==="Salmonella").length;return {p,n:ev.length,s,v:ev.length?100*s/ev.length:0};});
+ const W=Math.max(280,box.clientWidth||520),H=260,m={l:40,r:8,t:26,b:28};const svg=svgIn(box,W,H);
+ const bw=(W-m.l-m.r)/rows.length,sy=v=>H-m.b-(H-m.t-m.b)*v/100;
+ [0,25,50,75,100].forEach(g=>{el("line",{x1:m.l,x2:W-m.r,y1:sy(g),y2:sy(g),stroke:g===50?"#c9dbf0":"#e6ecf4","stroke-dasharray":g===50||!g?"":"4 4"},svg);txt(svg,m.l-8,sy(g)+4,g+"%",{"text-anchor":"end","font-size":11});});
+ rows.forEach(r=>{const i=rows.indexOf(r),x=m.l+i*bw+bw*.18,w=bw*.64,rx=Math.min(12,w/2.5);
+  el("rect",{x,width:w,y:sy(100),height:sy(0)-sy(100),fill:"#f3f8fd",rx},svg);
+  const b=el("rect",{x,width:w,y:sy(r.v),height:sy(0)-sy(r.v),fill:"#2364f0",rx},svg);
+  b.onmousemove=e=>tip(e,`<b>${r.p[0]}–${r.p[1]}</b><br>${r.s} of ${r.n} recall events were Salmonella`);b.onmouseleave=untip;
+  txt(svg,x+w/2,sy(r.v)-8,Math.round(r.v)+"%",{"text-anchor":"middle","font-size":13,"font-weight":700,fill:"#1d2433"});
+  txt(svg,x+w/2,H-8,`${r.p[0]}–’${String(r.p[1]).slice(2)}`,{"text-anchor":"middle"});});
+}
+function barList(box,rows,o={}){
+ // rows: [{k, v, n?, c?, label?}] horizontal rounded bars with a value label
+ const W=Math.max(280,box.clientWidth||520),rowH=o.rowH||28,lab=Math.min(o.lab||170,W*.42),m={l:lab,r:o.r||70,t:2,b:2},H=m.t+m.b+rowH*rows.length;
+ const svg=svgIn(box,W,H);const mx=Math.max(...rows.map(r=>r.v),1);
+ rows.forEach((r,i)=>{const y=m.t+i*rowH,w=Math.max(4,(W-m.l-m.r)*r.v/mx),bh=Math.min(14,rowH-10);
+  txt(svg,m.l-10,y+rowH/2+4,r.k,{"text-anchor":"end",fill:"#1d2433","font-size":12.5});
+  const b=el("rect",{x:m.l,y:y+(rowH-bh)/2,width:w,height:bh,rx:bh/2,fill:r.c||"#8aa4d4"},svg);
+  if(o.tip){b.onmousemove=e=>tip(e,o.tip(r));b.onmouseleave=untip;}
+  if(o.click){b.style.cursor="pointer";b.onclick=()=>{untip();o.click(r);};}
+  txt(svg,m.l+w+8,y+rowH/2+4,r.label??r.v,{fill:"#1d2433","font-weight":600,"font-size":12});});
+}
+function perEvent(){
+ const rows=HZ.map(h=>{const ev=E.filter(e=>e.hazard===h);if(ev.length<5)return null;const p=ev.reduce((a,b)=>a+b.n,0);return {k:short(h),h,v:p/ev.length,label:(p/ev.length).toFixed(1),n:ev.length,p,c:h==="Salmonella"?"#2364f0":"#8aa4d4"};}).filter(Boolean).sort((a,b)=>b.v-a.v);
+ barList($("#perEvent"),rows,{lab:150,rowH:26,tip:r=>`<b>${esc(r.h)}</b><br>${r.p} products in ${r.n} recall events`,click:r=>goFilter({h:r.h})});
+}
+function sparkCell(h){const n=Y1-Y0+1,W=130,H=22;const c=[];for(let y=Y0;y<=Y1;y++)c.push(E.filter(e=>e.year===y&&e.hazard===h).length);const mx=Math.max(...c,1);const col=h==="Salmonella"?"#2364f0":"#8aa4d4";
+ return `<svg width="${W}" height="${H}" aria-hidden="true">${c.map((v,i)=>v?`<rect x="${(i*W/n).toFixed(1)}" y="${(H-2-(H-4)*v/mx).toFixed(1)}" width="${(W/n-1.5).toFixed(1)}" height="${((H-4)*v/mx+1).toFixed(1)}" fill="${col}" rx="1.5"><title>${Y0+i}: ${v}</title></rect>`:`<rect x="${(i*W/n).toFixed(1)}" y="${H-2}" width="${(W/n-1.5).toFixed(1)}" height="1.5" fill="#e6ecf4"/>`).join("")}</svg>`;}
 function recurTable(){
  const rows=HZ.map(h=>{const ev=E.filter(e=>e.hazard===h);if(!ev.length)return null;const yrs=[...new Set(ev.map(e=>e.year).filter(Boolean))];
   const fc={};ev.forEach(e=>fc[e.firm_n]=(fc[e.firm_n]||0)+1);const rep=Object.values(fc).filter(v=>v>1).length;
   const cc={};ev.forEach(e=>cc[e.category]=(cc[e.category]||0)+1);const topc=Object.entries(cc).sort((a,b)=>b[1]-a[1])[0];
-  return {h,n:ev.length,p:ev.reduce((a,b)=>a+b.n,0),first:Math.min(...yrs),last:Math.max(...yrs),yrs:yrs.length,firms:Object.keys(fc).length,rep,topc:topc[0]+" ("+Math.round(100*topc[1]/ev.length)+"%)",c1:Math.round(100*ev.filter(e=>e.cls==="Class I").length/ev.length)};}).filter(Boolean).sort((a,b)=>b.n-a.n);
- const maxN=rows[0].n;
- $("#recurTable").innerHTML=`<table><thead><tr><th>Hazard</th><th>Events</th><th>Products</th><th>First–last</th><th>Active years</th><th>Firms</th><th>Repeat firms</th><th>Most common format</th><th>Class I</th><th>Timeline (by year)</th></tr></thead><tbody>${rows.map(r=>`<tr><td><span class="pill" style="background:${COL[r.h]}22;color:${COL[r.h]}">●</span> ${esc(r.h)}</td><td><div style="display:flex;align-items:center;gap:6px"><div style="height:8px;width:${Math.max(3,90*r.n/maxN)}px;background:${COL[r.h]};border-radius:4px"></div>${r.n}</div></td><td>${fmt(r.p)}</td><td>${r.first}–${r.last}</td><td>${r.yrs}</td><td>${r.firms}</td><td>${r.rep||"–"}</td><td>${esc(r.topc)}</td><td>${r.c1}%</td><td>${sparkCell(r.h)}</td></tr>`).join("")}</tbody></table>`;
- return rows;
+  return {h,n:ev.length,p:ev.reduce((a,b)=>a+b.n,0),first:Math.min(...yrs),last:Math.max(...yrs),yrs:yrs.length,rep,topc:`${CAT_LABEL[topc[0]]} (${Math.round(100*topc[1]/ev.length)}%)`,c1:pct(ev.filter(e=>e.cls==="Class I").length,ev.length)};}).filter(Boolean).sort((a,b)=>b.n-a.n);
+ $("#recurTable").innerHTML=`<table style="min-width:900px"><thead><tr><th>Hazard</th><th class="n">Events</th><th class="n">Products</th><th>First–last</th><th class="n">Active years</th><th class="n">Repeat firms</th><th>Most common product type</th><th class="n">Class I</th><th>By year, ${Y0}–${Y1}</th></tr></thead><tbody>${rows.map(r=>`<tr><td><span class="hz ${r.h==="Salmonella"?"s":""}">${esc(short(r.h))}</span></td><td class="n"><b>${r.n}</b></td><td class="n">${fmt(r.p)}</td><td>${r.first}–${r.last}</td><td class="n">${r.yrs}</td><td class="n">${r.rep||"–"}</td><td>${esc(r.topc)}</td><td class="n">${r.c1}</td><td>${sparkCell(r.h)}</td></tr>`).join("")}</tbody></table>`;
 }
 
-// ---------- Q2 heatmap ----------
+// ================= Product types =================
 function heat(){
- const hs=HZ.filter(h=>E.some(e=>e.hazard===h)); const cs=CATS.filter(c=>E.some(e=>e.category===c));
+ const hs=HZ.filter(h=>E.some(e=>e.hazard===h)).sort((a,b)=>E.filter(e=>e.hazard===b).length-E.filter(e=>e.hazard===a).length);
+ const cs=CATS.filter(c=>E.some(e=>e.category===c));
  let mx=0;const cnt={};hs.forEach(h=>cs.forEach(c=>{const n=E.filter(e=>e.hazard===h&&e.category===c).length;cnt[h+"|"+c]=n;mx=Math.max(mx,n);}));
- $("#heat").innerHTML=`<table class="heat"><thead><tr><th></th>${cs.map(c=>`<th>${esc(c)}</th>`).join("")}</tr></thead><tbody>${hs.map(h=>{const tot=cs.reduce((a,c)=>a+cnt[h+"|"+c],0);return `<tr><td class="rh">${esc(h)}</td>${cs.map(c=>{const n=cnt[h+"|"+c];const share=tot?n/tot:0;const a=n?0.12+0.88*Math.sqrt(n/mx):0;return `<td><div class="cell" data-h="${esc(h)}" data-c="${esc(c)}" title="${n} events · ${Math.round(share*100)}% of ${esc(h)} recalls" style="background:rgba(10,92,138,${a});color:${a>.5?"#fff":"#1d2330"}">${n||""}</div></td>`}).join("")}</tr>`}).join("")}</tbody></table>`;
- document.querySelectorAll("#heat .cell").forEach(c=>c.onclick=()=>setFilters({h:c.dataset.h,c:c.dataset.c}));
+ $("#heat").innerHTML=`<table class="grid" style="min-width:520px"><thead><tr><th></th>${cs.map(c=>`<th>${esc(CAT_LABEL[c])}</th>`).join("")}</tr></thead><tbody>${hs.map(h=>`<tr><td class="rh">${esc(short(h))}</td>${cs.map(c=>{const n=cnt[h+"|"+c];const a=n?0.1+0.9*Math.sqrt(n/mx):0;return `<td><div class="cell" data-h="${esc(h)}" data-c="${esc(c)}" title="${esc(short(h))} in ${esc(CAT_LABEL[c].toLowerCase())}: ${n} recall event${n===1?"":"s"}" style="background:${n?`rgba(35,100,240,${a.toFixed(2)})`:"#f3f8fd"};color:${a>.5?"#fff":"#1d2433"}">${n||""}</div></td>`}).join("")}</tr>`).join("")}</tbody></table>`;
+ document.querySelectorAll("#heat .cell").forEach(c=>c.onclick=()=>goFilter({h:c.dataset.h,c:c.dataset.c}));
+}
+function stack100(box,rows,keys,colors,lab=170){
+ const W=Math.max(300,box.clientWidth||520),rowH=30,L=Math.min(lab,W*.4),m={l:L,r:4,t:2,b:2},H=m.t+m.b+rowH*rows.length;const svg=svgIn(box,W,H);
+ rows.forEach((r,i)=>{const y=m.t+i*rowH,bh=18,iw=W-m.l-m.r;let x=m.l;
+  txt(svg,m.l-10,y+rowH/2+4,r.k,{"text-anchor":"end",fill:"#1d2433","font-size":12.5});
+  const id="s"+box.id+i,cp=el("clipPath",{id},svg);el("rect",{x:m.l,y:y+(rowH-bh)/2,width:iw,height:bh,rx:bh/2},cp);const g=el("g",{"clip-path":`url(#${id})`},svg);
+  keys.forEach(k=>{const v=r.c[k]||0;if(!v)return;const w=iw*v/r.tot;const b=el("rect",{x,y:y+(rowH-bh)/2,width:w,height:bh,fill:colors[k],stroke:"#fff","stroke-width":1.5},g);
+   b.onmousemove=e=>tip(e,`<b>${esc(r.k)} · ${esc(k)}</b><br>${v} of ${r.tot} recall events (${Math.round(100*v/r.tot)}%)`);b.onmouseleave=untip;
+   if(w>34)txt(svg,x+w/2,y+rowH/2+4,Math.round(100*v/r.tot)+"%",{"text-anchor":"middle","font-size":11,"font-weight":700,fill:["#2364f0","#2b3a55","#7c98c8","#1d2433"].includes(colors[k])?"#fff":"#1d2433","pointer-events":"none"});x+=w;});});
+ box.insertAdjacentHTML("beforeend",`<div class="legend">${keys.map(k=>`<span><i style="background:${colors[k]}"></i>${esc(k)}</span>`).join("")}</div>`);
 }
 function catShift(){
- const P=[[2002,2007],[2008,2012],[2013,2017],[2018,2022],[2023,2026]];
- const box=$("#catShift"), W=box.clientWidth||420, H=260, m={l:70,r:10,t:6,b:6};
- const svg=el("svg",{width:W,height:H},box); const bh=(H-m.t-m.b)/P.length;
- const CC={"Dry kibble":"#0a5c8a","Wet / canned":"#60a5fa","Raw / frozen / freeze-dried":"#c2410c","Treats & chews":"#f59e0b","Supplements":"#a78bfa","Other / unspecified":"#d1d5db"};
- P.forEach((p,i)=>{const ev=E.filter(e=>e.year>=p[0]&&e.year<=p[1]);let x=m.l;
-  el("text",{x:m.l-8,y:m.t+i*bh+bh/2+4,"text-anchor":"end","font-size":12,fill:"#5f6878"},svg).textContent=`${p[0]}–${String(p[1]).slice(-2)}`;
-  CATS.forEach(c=>{const n=ev.filter(e=>e.category===c).length;if(!n)return;const w=(W-m.l-m.r)*n/ev.length;
-   const r=el("rect",{x,y:m.t+i*bh+6,width:w-1,height:bh-12,fill:CC[c],rx:3},svg);
-   r.onmousemove=e=>tip(e,`<b>${p[0]}–${p[1]} · ${esc(c)}</b><br>${n} of ${ev.length} events (${Math.round(100*n/ev.length)}%)`);r.onmouseleave=untip;
-   if(w>34)el("text",{x:x+w/2,y:m.t+i*bh+bh/2+4,"text-anchor":"middle","font-size":11,fill:"#fff","font-weight":600},svg).textContent=Math.round(100*n/ev.length)+"%";
-   x+=w;});});
- box.insertAdjacentHTML("beforeend",`<div class="chips" style="margin-top:6px">${CATS.map(c=>`<span class="chip" style="cursor:default"><i style="background:${CC[c]}"></i>${esc(c)}</span>`).join("")}</div>`);
+ const P=[[2003,2007],[2008,2012],[2013,2017],[2018,2022],[2023,Y1]];
+ const rows=P.map(p=>{const ev=E.filter(e=>e.year>=p[0]&&e.year<=p[1]);const c={};ev.forEach(e=>{const k=CAT_LABEL[e.category];c[k]=(c[k]||0)+1;});return {k:`${p[0]}–’${String(p[1]).slice(2)}`,c,tot:ev.length};});
+ const keys=["Raw, frozen, freeze-dried","Dry kibble","Treats & chews","Canned","Supplements","Other"];const colors={};CATS.forEach(c=>colors[CAT_LABEL[c]]=CAT_COL[c]);
+ stack100($("#catShift"),rows,keys,colors,80);
+}
+function speciesChart(){
+ const keys=["Dog","Cat","Dog & cat","Not stated"],colors={"Dog":"#2364f0","Cat":"#2b3a55","Dog & cat":"#8aa4d4","Not stated":"#e6ebf2"};
+ const rows=HZ.map(h=>{const ev=E.filter(e=>e.hazard===h);if(ev.length<5)return null;const c={};ev.forEach(e=>{const k=["Dog","Cat","Dog & cat"].includes(e.species)?e.species:"Not stated";c[k]=(c[k]||0)+1;});return {k:short(h),c,tot:ev.length};}).filter(Boolean);
+ stack100($("#speciesChart"),rows,keys,colors,140);
+}
+function severity(){
+ const keys=["Class I","Class II","Class III"],colors={"Class I":"#1d2433","Class II":"#7c98c8","Class III":"#d6e6f5"};
+ const rows=CATS.map(c=>{const ev=E.filter(e=>e.category===c);if(!ev.length)return null;const cc={};ev.forEach(e=>cc[e.cls]=(cc[e.cls]||0)+1);return {k:CAT_LABEL[c],c:cc,tot:ev.length};}).filter(Boolean).sort((a,b)=>(b.c["Class I"]||0)/b.tot-(a.c["Class I"]||0)/a.tot);
+ stack100($("#severity"),rows,keys,colors,170);
 }
 
-// ---------- Q3 ----------
+// ================= Time to recall =================
 function drawCases(){
- const box=$("#cases");box.innerHTML="";
+ const box=$("#cases");
  const cs=CASES.filter(c=>c.lag_days!=null).sort((a,b)=>a.lag_days-b.lag_days);
- if(!cs.length){box.innerHTML="<p class='small'>No case data.</p>";return;}
- const W=box.clientWidth||1100, rowH=34, m={l:360,r:70,t:24,b:10}, H=m.t+m.b+rowH*cs.length;
- const svg=el("svg",{width:W,height:H},box);
- const lo=Math.log10(1), hi=Math.log10(Math.max(...cs.map(c=>c.lag_days))*1.3);
- const sx=v=>m.l+(W-m.l-m.r)*(Math.log10(Math.max(1,v))-lo)/(hi-lo);
- [1,7,30,90,365,1000,2000].filter(v=>Math.log10(v)<=hi).forEach(v=>{el("line",{x1:sx(v),x2:sx(v),y1:m.t-6,y2:H-m.b,stroke:"#eef0f3"},svg);el("text",{x:sx(v),y:m.t-10,"text-anchor":"middle","font-size":10.5,fill:"#8a93a3"},svg).textContent=v===1?"1 day":v===7?"1 wk":v===30?"1 mo":v===90?"3 mo":v===365?"1 yr":v+" d";});
+ if(!cs.length){box.innerHTML="<p class='empty'>No outbreak timelines.</p>";return;}
+ const W=Math.max(680,box.clientWidth||1100),rowH=40,m={l:Math.min(340,W*.38),r:80,t:26,b:6},H=m.t+m.b+rowH*cs.length;const svg=svgIn(box,W,H);
+ const hi=Math.log10(Math.max(...cs.map(c=>c.lag_days))*1.3);const sx=v=>m.l+(W-m.l-m.r)*Math.log10(Math.max(1,v))/hi;
+ [[1,"1 day"],[7,"1 week"],[30,"1 month"],[90,"3 months"],[365,"1 year"],[1826,"5 years"]].filter(v=>Math.log10(v[0])<=hi).forEach(([v,l])=>{el("line",{x1:sx(v),x2:sx(v),y1:m.t-8,y2:H-m.b,stroke:"#e6ecf4","stroke-dasharray":"4 4"},svg);txt(svg,sx(v),m.t-12,l,{"text-anchor":"middle","font-size":11});});
  cs.forEach((c,i)=>{const y=m.t+i*rowH;
-  el("text",{x:m.l-10,y:y+rowH/2-2,"text-anchor":"end","font-size":12.5,fill:"#1d2330","font-weight":600},svg).textContent=c.short||c.episode;
-  el("text",{x:m.l-10,y:y+rowH/2+12,"text-anchor":"end","font-size":10.5,fill:"#8a93a3"},svg).textContent=`${c.hazard} · signal: ${c.signal_type}`;
-  const col=COL[c.hazard_key]||"#475569";
-  const r=el("rect",{x:sx(1),y:y+8,width:Math.max(3,sx(c.lag_days)-sx(1)),height:rowH-16,fill:col,rx:4,opacity:c.approx?0.7:1},svg);
-  el("text",{x:sx(c.lag_days)+6,y:y+rowH/2+4,"font-size":12,fill:"#1d2330","font-weight":600},svg).textContent=`${fmt(c.lag_days)} d${c.approx?"*":""}`;
-  r.onmousemove=e=>tip(e,`<b>${esc(c.episode)}</b><br><b>First signal ${esc(c.first_signal_date)}:</b> ${esc(c.first_signal)}<br><b>Recall ${esc(c.recall_date)}:</b> ${esc(c.recall)}<br>${c.harm?`<b>Harm:</b> ${esc(c.harm)}<br>`:""}<span style="color:#9fb0c2">${esc(c.source_label||"")}</span>`);r.onmouseleave=untip;
+  txt(svg,m.l-12,y+rowH/2-2,c.short||c.episode,{"text-anchor":"end",fill:"#1d2433","font-weight":700,"font-size":12.5});
+  txt(svg,m.l-12,y+rowH/2+13,`${short(c.hazard)} · first sign: ${c.signal_type}`,{"text-anchor":"end","font-size":11});
+  const fast=c.lag_days<=60,bh=14;
+  const bwid=Math.max(bh,sx(c.lag_days)-sx(1));
+  const r=el("rect",{x:sx(1),y:y+(rowH-bh)/2,width:bwid,height:bh,rx:bh/2,fill:fast?"#2364f0":"#2b3a55",opacity:c.approx?0.65:1},svg);
+  txt(svg,sx(1)+bwid+8,y+rowH/2+4,`${fmt(c.lag_days)} day${c.lag_days===1?"":"s"}${c.approx?"*":""}`,{fill:"#1d2433","font-weight":700,"font-size":12});
+  r.onmousemove=e=>tip(e,`<b>${esc(c.episode)}</b><br><b>First sign, ${esc(c.first_signal_date)}:</b> ${esc(c.first_signal)}<br><b>Recall, ${esc(c.recall_date)}:</b> ${esc(c.recall)}${c.harm?`<br><b>Harm:</b> ${esc(c.harm)}`:""}<br><span class="m">${esc(c.source_label||"")}</span>`);r.onmouseleave=untip;
  });
- $("#caseNotes").innerHTML=`<p>Some big recalls have no public date for the first complaint: Hill's canned dog food with too much vitamin D (recalled Jan 31, 2019, and Hill's had 85 complaints of pet deaths by Feb 11), the 2018 vitamin D dry foods (Nutrisca, Sunshine Mills, ELM and others), Blue Buffalo in 2017 and Merrick in 2018 (thyroid hormone), and Northwest Naturals in Dec 2024 (H5N1). The companies said they acted on complaints but didn't say when those came in.</p><p>* Approximate date. The two "hindsight" rows measure from the first human illness, which investigators linked to the food only later. Sources: ${cs.map((c,i)=>`<a href="${esc(c.url)}" target="_blank" rel="noopener">${esc(c.short||c.episode)}</a>`).join(" · ")}</p>`;
+ $("#caseNotes").innerHTML=`<div class="legend" style="margin:0 0 10px"><span><i style="background:#2364f0"></i>Recalled within 2 months</span><span><i style="background:#2b3a55"></i>Took longer</span></div><p>Some big recalls have no public date for the first complaint: Hill's canned dog food with too much vitamin D (recalled Jan 31, 2019, and Hill's had 85 complaints of pet deaths by Feb 11), the 2018 vitamin D dry foods (Nutrisca, Sunshine Mills, ELM and others), Blue Buffalo in 2017 and Merrick in 2018 (thyroid hormone), and Northwest Naturals in Dec 2024 (H5N1). The companies said they acted on complaints but didn't say when those came in.</p><p>* Approximate date. The two "hindsight" rows measure from the first human illness, which investigators linked to the food only later. Sources: ${cs.map(c=>`<a href="${esc(c.url)}" target="_blank" rel="noopener">${esc(c.short||c.episode)}</a>`).join(" · ")}</p>`;
 }
-function barH(boxSel,rows,colorFn,unit="d"){
- const box=$(boxSel);box.innerHTML="";const W=box.clientWidth||520,rowH=24,m={l:215,r:95,t:4,b:4},H=m.t+m.b+rowH*rows.length;
- const svg=el("svg",{width:W,height:H},box);const mx=Math.max(...rows.map(r=>r.v));
- rows.forEach((r,i)=>{const y=m.t+i*rowH;el("text",{x:m.l-8,y:y+rowH/2+4,"text-anchor":"end","font-size":12,fill:"#1d2330"},svg).textContent=r.k;
-  const w=(W-m.l-m.r)*r.v/mx;const b=el("rect",{x:m.l,y:y+4,width:Math.max(2,w),height:rowH-8,fill:colorFn(r),rx:3},svg);
-  b.onmousemove=e=>tip(e,`<b>${esc(r.k)}</b><br>median ${r.v} days, n=${r.n} events`);b.onmouseleave=untip;
-  el("text",{x:m.l+w+6,y:y+rowH/2+4,"font-size":11.5,fill:"#5f6878"},svg).textContent=`${r.v}${unit} (n=${r.n})`;});
-}
+function lagRows(){const rows=[];for(let y=2012;y<=Y1;y++){const l=E.filter(e=>e.year===y&&e.fda_lag!=null&&e.fda_lag>=0).map(e=>e.fda_lag);if(l.length)rows.push({y,v:median(l),n:l.length});}return rows;}
 function lagYear(){
- const box=$("#lagYear");box.innerHTML="";const rows=[];
- for(let y=2012;y<=Math.max(...years);y++){const l=E.filter(e=>e.year===y&&e.fda_lag!=null&&e.fda_lag>=0).map(e=>e.fda_lag);if(l.length)rows.push({y,v:median(l),n:l.length});}
- const W=box.clientWidth||520,H=260,m={l:40,r:10,t:14,b:26};const svg=el("svg",{width:W,height:H},box);
- const mx=Math.max(...rows.map(r=>r.v)), bw=(W-m.l-m.r)/rows.length, sy=v=>H-m.b-(H-m.t-m.b)*v/mx;
- [0,100,200,300,400].filter(v=>v<=mx).forEach(g=>{el("line",{x1:m.l,x2:W-m.r,y1:sy(g),y2:sy(g),stroke:"#eef0f3"},svg);el("text",{x:m.l-6,y:sy(g)+4,"text-anchor":"end","font-size":10.5,fill:"#8a93a3"},svg).textContent=g;});
- rows.forEach((r,i)=>{const b=el("rect",{x:m.l+i*bw+3,width:bw-6,y:sy(r.v),height:sy(0)-sy(r.v),fill:r.y>=2020?"#0a5c8a":"#9bb8cc",rx:2},svg);
-  b.onmousemove=e=>tip(e,`<b>${r.y}</b><br>median ${r.v} days from recall start to FDA classification<br>n=${r.n} events`);b.onmouseleave=untip;
-  el("text",{x:m.l+i*bw+bw/2,y:H-9,"text-anchor":"middle","font-size":10.5,fill:"#5f6878"},svg).textContent="'"+String(r.y).slice(-2);
-  el("text",{x:m.l+i*bw+bw/2,y:sy(r.v)-4,"text-anchor":"middle","font-size":10,fill:"#5f6878"},svg).textContent=Math.round(r.v);});
+ const box=$("#lagYear");const rows=lagRows();
+ const W=Math.max(280,box.clientWidth||520),H=250,m={l:38,r:6,t:20,b:26};const svg=svgIn(box,W,H);
+ const mx=Math.max(...rows.map(r=>r.v)),st=niceStep(mx),top=Math.ceil(mx/st)*st,bw=(W-m.l-m.r)/rows.length,pad=Math.min(10,bw*.3),sy=v=>H-m.b-(H-m.t-m.b)*v/top;
+ for(let g=0;g<=top;g+=st){el("line",{x1:m.l,x2:W-m.r,y1:sy(g),y2:sy(g),stroke:"#e6ecf4","stroke-dasharray":g?"4 4":""},svg);txt(svg,m.l-8,sy(g)+4,g,{"text-anchor":"end","font-size":11});}
+ rows.forEach((r,i)=>{const x=m.l+i*bw+pad/2,w=bw-pad;const b=el("rect",{x,width:w,y:sy(r.v),height:sy(0)-sy(r.v),rx:Math.min(8,w/2.5),fill:r.y>=2020?"#2364f0":"#c9dbf0"},svg);
+  b.onmousemove=e=>tip(e,`<b>${r.y}</b><br>Median ${Math.round(r.v)} days from recall start to FDA classification<br><span class="m">${r.n} recall events</span>`);b.onmouseleave=untip;
+  if(bw>22)txt(svg,x+w/2,sy(r.v)-5,Math.round(r.v),{"text-anchor":"middle","font-size":10.5,fill:"#1d2433","font-weight":600});
+  if(bw>22||i%2===0)txt(svg,x+w/2,H-8,"’"+String(r.y).slice(2),{"text-anchor":"middle","font-size":11});});
+ box.insertAdjacentHTML("beforeend",`<div class="legend"><span><i style="background:#c9dbf0"></i>2012–2019</span><span><i style="background:#2364f0"></i>Since 2020</span></div>`);
  return rows;
 }
 function lagHaz(){
- const rows=HZ.map(h=>{const l=E.filter(e=>e.hazard===h&&e.fda_lag!=null&&e.fda_lag>=0).map(e=>e.fda_lag);return l.length>=3?{k:h,v:Math.round(median(l)),n:l.length}:null}).filter(Boolean).sort((a,b)=>b.v-a.v);
- barH("#lagHaz",rows,r=>COL[r.k]);return rows;
-}
-
-// ---------- Q4 ----------
-function repeatChart(){
- const m={};E.forEach(e=>{const k=e.firm_n+"|"+e.hazard;(m[k]=m[k]||[]).push(e);});
- const epi=v=>{const ds=v.map(e=>e.init).filter(Boolean).sort();let n=ds.length?1:0;for(let i=1;i<ds.length;i++)if((new Date(ds[i])-new Date(ds[i-1]))/864e5>90)n++;return n;};
- const all=Object.entries(m).map(([k,v])=>{const [f,h]=k.split("|");const ys=v.map(e=>e.init).filter(Boolean).sort();return {f,h,v,ys,ep:epi(v)}}).filter(r=>r.ep>=2).sort((a,b)=>b.ep-a.ep||b.v.length-a.v.length||a.f.localeCompare(b.f));
- const rows=all.filter(r=>r.ep>=(window.REP_ALL?2:3));
- const box=$("#repeatChart");box.innerHTML=`<div class="small" style="margin-bottom:6px">Showing ${rows.length} of ${all.length} firm/hazard pairs with ${window.REP_ALL?"2+":"3+"} separate episodes (recalls more than 90 days apart count as separate episodes). <a href="#" id="repTog">${window.REP_ALL?"Show 3+ only":"Show all 2+ repeats"}</a> · click a dot to open it in the explorer</div>`;const y0=Math.min(...years),y1=Math.max(...years)+1;
- const W=box.clientWidth||1100,rowH=22,mm={l:300,r:20,t:20,b:6},H=mm.t+mm.b+rowH*rows.length;const svg=el("svg",{width:W,height:H},box);
- const sx=d=>{const t=new Date(d);return mm.l+(W-mm.l-mm.r)*((t.getFullYear()+t.getMonth()/12)-y0)/(y1-y0);};
- for(let y=y0;y<=y1;y+=2){const x=sx(y+"-01-01");el("line",{x1:x,x2:x,y1:mm.t-4,y2:H,stroke:"#f0f1f4"},svg);el("text",{x,y:12,"text-anchor":"middle","font-size":10.5,fill:"#8a93a3"},svg).textContent=y;}
- rows.forEach((r,i)=>{const y=mm.t+i*rowH;el("text",{x:mm.l-8,y:y+rowH/2+4,"text-anchor":"end","font-size":12,fill:"#1d2330"},svg).textContent=`${r.f} · ${r.h.split(" /")[0]} (${r.ep})`;
-  if(r.ys.length>1)el("line",{x1:sx(r.ys[0]),x2:sx(r.ys[r.ys.length-1]),y1:y+rowH/2,y2:y+rowH/2,stroke:COL[r.h],"stroke-width":2,opacity:.35},svg);
-  r.v.forEach(e=>{if(!e.init)return;const c=el("circle",{cx:sx(e.init),cy:y+rowH/2,r:5.5,fill:COL[r.h],stroke:"#fff","stroke-width":1.5},svg);
-   c.onmousemove=ev=>tip(ev,`<b>${esc(r.f)}</b> · ${e.init}<br>${esc(e.hazard)} · ${esc(e.category)} · ${e.n} product(s)<br><span style="color:#9fb0c2">${esc(e.reason.slice(0,180))}</span>`);c.onmouseleave=untip;c.onclick=()=>setFilters({q:r.f,h:r.h});});});
- $("#repTog").onclick=ev=>{ev.preventDefault();window.REP_ALL=!window.REP_ALL;repeatChart();};
- return all;
-}
-
-
-// ---------- new visuals ----------
-function spark(){
- const box=$("#spark");box.innerHTML="";const y0=Math.min(...years),y1=Math.max(...years);const W=box.clientWidth||1100,H=90,m={l:4,r:4,t:16,b:18};
- const svg=el("svg",{width:W,height:H},box);const ys=[];for(let y=y0;y<=y1;y++)ys.push({y,n:E.filter(e=>e.year===y).length,s:E.filter(e=>e.year===y).reduce((a,b)=>a+b.n,0)});
- const mx=Math.max(...ys.map(d=>d.n)),bw=(W-m.l-m.r)/ys.length,sy=v=>H-m.b-(H-m.t-m.b)*v/mx;
- const notes={2007:"Melamine crisis",2018:"Vitamin D + raw pathogens",2013:"Jerky treat antibiotic residues"};
- ys.forEach((d,i)=>{const x=m.l+i*bw;const r=el("rect",{x:x+1.5,width:bw-3,y:sy(d.n),height:sy(0)-sy(d.n),fill:notes[d.y]?"#fdba74":"#5b8db3",rx:2},svg);
-  r.onmousemove=e=>{const hz={};E.filter(x=>x.year===d.y).forEach(x=>hz[x.hazard]=(hz[x.hazard]||0)+1);tip(e,`<b>${d.y}</b><br>${d.n} recall events · ${d.s} products<br>${Object.entries(hz).sort((a,b)=>b[1]-a[1]).slice(0,4).map(([h,n])=>`${esc(h)}: ${n}`).join("<br>")}`);};r.onmouseleave=untip;
-  if(i%2===0||i===ys.length-1)el("text",{x:x+bw/2,y:H-4,"text-anchor":"middle","font-size":10,fill:"#8fa3b8"},svg).textContent="'"+String(d.y).slice(-2);
-  if(notes[d.y])el("text",{x:x+bw/2,y:sy(d.n)-4,"text-anchor":"middle","font-size":10.5,fill:"#fdba74","font-weight":600},svg).textContent=notes[d.y];});
-}
-function bubble(){
- const box=$("#bubble");box.innerHTML="";const W=box.clientWidth||520,H=330,m={l:44,r:18,t:14,b:40};
- const pts=HZ.map(h=>{const ev=E.filter(e=>e.hazard===h);if(!ev.length)return null;const p=ev.reduce((a,b)=>a+b.n,0);return {h,n:ev.length,yrs:new Set(ev.map(e=>e.year).filter(Boolean)).size,avg:p/ev.length,p};}).filter(Boolean);
- const svg=el("svg",{width:W,height:H},box);const xm=Math.max(...pts.map(p=>p.yrs))+1;const sx=v=>m.l+(W-m.l-m.r)*v/xm;
- const ylo=Math.log10(0.8),yhi=Math.log10(40);const sy=v=>H-m.b-(H-m.t-m.b)*(Math.log10(v)-ylo)/(yhi-ylo);const rr=n=>4+Math.sqrt(n)*2.2;
- el("rect",{x:m.l,y:m.t,width:(sx(xm/2)-m.l),height:sy(6)-m.t,fill:"#fff7ed"},svg);el("rect",{x:sx(xm/2),y:sy(6),width:W-m.r-sx(xm/2),height:H-m.b-sy(6),fill:"#f0f7fc"},svg);
- el("text",{x:m.l+6,y:m.t+14,"font-size":11,fill:"#c2410c","font-weight":700},svg).textContent="Rare, many products per recall";
- el("text",{x:W-m.r-6,y:H-m.b-8,"text-anchor":"end","font-size":11,fill:"#0a5c8a","font-weight":700},svg).textContent="Most years, few products per recall";
- [1,2,5,10,20].forEach(v=>{el("line",{x1:m.l,x2:W-m.r,y1:sy(v),y2:sy(v),stroke:"#eef0f3"},svg);el("text",{x:m.l-6,y:sy(v)+4,"text-anchor":"end","font-size":10.5,fill:"#8a93a3"},svg).textContent=v;});
- for(let v=0;v<=xm;v+=4)el("text",{x:sx(v),y:H-m.b+14,"text-anchor":"middle","font-size":10.5,fill:"#8a93a3"},svg).textContent=v;
- el("text",{x:(W+m.l)/2,y:H-6,"text-anchor":"middle","font-size":11,fill:"#5f6878"},svg).textContent="Years with at least one recall";
- const lab=new Set(["Salmonella","Melamine / cyanuric acid","Aflatoxin / mycotoxin","Vitamin D excess","Listeria","Pentobarbital","Mold / spoilage","Nutrient deficiency / excess"]);
- pts.sort((a,b)=>b.n-a.n).forEach(p=>{const c=el("circle",{cx:sx(p.yrs),cy:sy(p.avg),r:rr(p.n),fill:COL[p.h],"fill-opacity":.75,stroke:"#fff","stroke-width":1.5},svg);
-  c.onmousemove=e=>tip(e,`<b>${esc(p.h)}</b><br>${p.n} events in ${p.yrs} different years<br>${p.avg.toFixed(1)} products per event (${p.p} total)`);c.onmouseleave=untip;c.onclick=()=>setFilters({h:p.h});
-  if(lab.has(p.h))el("text",{x:sx(p.yrs)+rr(p.n)+4,y:sy(p.avg)+4,"font-size":11,fill:"#1d2330","font-weight":600},svg).textContent=p.h.split(" /")[0].replace(" deficiency","");});
-}
-function salShare(){
- const box=$("#salShare");box.innerHTML="";const P=[[2003,2007],[2008,2012],[2013,2017],[2018,2022],[2023,2026]];const W=box.clientWidth||520,H=300,m={l:40,r:14,t:24,b:30};
- const rows=P.map(p=>{const ev=E.filter(e=>e.year>=p[0]&&e.year<=p[1]);const s=ev.filter(e=>e.hazard==="Salmonella").length;return {p,n:ev.length,s,v:100*s/ev.length};});
- const svg=el("svg",{width:W,height:H},box);const bw=(W-m.l-m.r)/rows.length,sy=v=>H-m.b-(H-m.t-m.b)*v/100;
- [0,25,50,75,100].forEach(g=>{el("line",{x1:m.l,x2:W-m.r,y1:sy(g),y2:sy(g),stroke:g===50?"#d6dae1":"#eef0f3","stroke-dasharray":g===50?"4 3":""},svg);el("text",{x:m.l-6,y:sy(g)+4,"text-anchor":"end","font-size":10.5,fill:"#8a93a3"},svg).textContent=g+"%";});
- rows.forEach((r,i)=>{const x=m.l+i*bw+bw*.2,w=bw*.6;el("rect",{x,width:w,y:sy(100),height:sy(0)-sy(100),fill:"#f3f4f6",rx:4},svg);
-  const b=el("rect",{x,width:w,y:sy(r.v),height:sy(0)-sy(r.v),fill:COL.Salmonella,rx:4},svg);b.onmousemove=e=>tip(e,`<b>${r.p[0]}–${r.p[1]}</b><br>${r.s} of ${r.n} events were Salmonella`);b.onmouseleave=untip;
-  el("text",{x:x+w/2,y:sy(r.v)-6,"text-anchor":"middle","font-size":13,"font-weight":700,fill:"#7c2d12"},svg).textContent=Math.round(r.v)+"%";
-  el("text",{x:x+w/2,y:H-10,"text-anchor":"middle","font-size":11,fill:"#5f6878"},svg).textContent=`${r.p[0]}–${String(r.p[1]).slice(-2)}`;});
-}
-function sparkCell(h){const y0=Math.min(...years),y1=Math.max(...years),n=y1-y0+1,W=130,H=22;const c=[];for(let y=y0;y<=y1;y++)c.push(E.filter(e=>e.year===y&&e.hazard===h).length);const mx=Math.max(...c,1);
- return `<svg width="${W}" height="${H}">${c.map((v,i)=>v?`<rect x="${i*W/n}" y="${H-2-(H-4)*v/mx}" width="${W/n-1}" height="${(H-4)*v/mx+1}" fill="${COL[h]}" rx="1"><title>${y0+i}: ${v}</title></rect>`:`<rect x="${i*W/n}" y="${H-2}" width="${W/n-1}" height="1" fill="#e5e7eb"/>`).join("")}</svg>`;}
-function stack100(boxSel,rows,keys,colors,labelW=190){
- const box=$(boxSel);box.innerHTML="";const W=box.clientWidth||520,rowH=26,m={l:labelW,r:10,t:4,b:4},H=m.t+m.b+rowH*rows.length;const svg=el("svg",{width:W,height:H},box);
- rows.forEach((r,i)=>{const y=m.t+i*rowH;let x=m.l;el("text",{x:m.l-8,y:y+rowH/2+4,"text-anchor":"end","font-size":12,fill:"#1d2330"},svg).textContent=`${r.k} (${r.tot})`;
-  keys.forEach(k=>{const v=r.c[k]||0;if(!v)return;const w=(W-m.l-m.r)*v/r.tot;const b=el("rect",{x,y:y+4,width:Math.max(1,w-1),height:rowH-8,fill:colors[k],rx:2},svg);
-   b.onmousemove=e=>tip(e,`<b>${esc(r.k)} · ${esc(k)}</b><br>${v} of ${r.tot} events (${Math.round(100*v/r.tot)}%)`);b.onmouseleave=untip;
-   if(w>30)el("text",{x:x+w/2,y:y+rowH/2+4,"text-anchor":"middle","font-size":10.5,fill:"#fff","font-weight":600},svg).textContent=Math.round(100*v/r.tot)+"%";x+=w;});});
- box.insertAdjacentHTML("beforeend",`<div class="legend">${keys.map(k=>`<span><i style="background:${colors[k]}"></i>${esc(k)}</span>`).join("")}</div>`);
-}
-function speciesChart(){
- const keys=["Dog","Cat","Dog & cat","Other / unlabeled"],colors={"Dog":"#0a5c8a","Cat":"#c2410c","Dog & cat":"#8b5cf6","Other / unlabeled":"#cbd5e1"};
- const rows=HZ.map(h=>{const ev=E.filter(e=>e.hazard===h);if(ev.length<5)return null;const c={};ev.forEach(e=>{const k=["Dog","Cat","Dog & cat"].includes(e.species)?e.species:"Other / unlabeled";c[k]=(c[k]||0)+1;});return {k:h.split(" /")[0],c,tot:ev.length};}).filter(Boolean);
- stack100("#speciesChart",rows,keys,colors,150);
-}
-function severity(){
- const keys=["Class I","Class II","Class III"],colors={"Class I":"#b91c1c","Class II":"#f59e0b","Class III":"#93c5fd"};
- const rows=CATS.map(c=>{const ev=E.filter(e=>e.category===c);if(!ev.length)return null;const cc={};ev.forEach(e=>cc[e.cls]=(cc[e.cls]||0)+1);return {k:c,c:cc,tot:ev.length};}).filter(Boolean).sort((a,b)=>(b.c["Class I"]||0)/b.tot-(a.c["Class I"]||0)/a.tot);
- stack100("#severity",rows,keys,colors,190);
+ const rows=HZ.map(h=>{const l=E.filter(e=>e.hazard===h&&e.fda_lag!=null&&e.fda_lag>=0).map(e=>e.fda_lag);return l.length>=3?{k:short(h),h,v:Math.round(median(l)),n:l.length,c:h==="Salmonella"?"#2364f0":"#8aa4d4"}:null}).filter(Boolean).sort((a,b)=>b.v-a.v);
+ rows.forEach(r=>r.label=r.v+" days");
+ barList($("#lagHaz"),rows,{lab:140,rowH:26,r:76,tip:r=>`<b>${esc(r.h)}</b><br>Median ${r.v} days, ${r.n} recall events`});
 }
 function lagHist(){
- const box=$("#lagHist");box.innerHTML="";const B=[[0,14,"≤2 wk"],[15,30,"2–4 wk"],[31,60,"1–2 mo"],[61,90,"2–3 mo"],[91,180,"3–6 mo"],[181,365,"6–12 mo"],[366,99999,">1 yr"]];
- const grp=[["2012–2019",e=>e.year>=2012&&e.year<2020,"#9bb8cc"],["2020–2026",e=>e.year>=2020,"#0a5c8a"]];
- const data=grp.map(([n,f,c])=>{const l=E.filter(e=>f(e)&&e.fda_lag!=null&&e.fda_lag>=0).map(e=>e.fda_lag);return {n,c,tot:l.length,v:B.map(b=>100*l.filter(x=>x>=b[0]&&x<=b[1]).length/l.length),k:B.map(b=>l.filter(x=>x>=b[0]&&x<=b[1]).length)};});
- const W=box.clientWidth||1100,H=250,m={l:40,r:10,t:14,b:30};const svg=el("svg",{width:W,height:H},box);const mx=Math.max(...data.flatMap(d=>d.v));
- const gw=(W-m.l-m.r)/B.length,sy=v=>H-m.b-(H-m.t-m.b)*v/mx;
- [0,10,20,30,40,50].filter(g=>g<=mx).forEach(g=>{el("line",{x1:m.l,x2:W-m.r,y1:sy(g),y2:sy(g),stroke:"#eef0f3"},svg);el("text",{x:m.l-6,y:sy(g)+4,"text-anchor":"end","font-size":10.5,fill:"#8a93a3"},svg).textContent=g+"%";});
- B.forEach((b,i)=>{data.forEach((d,j)=>{const x=m.l+i*gw+gw*.15+j*gw*.35,w=gw*.33;const r=el("rect",{x,width:w,y:sy(d.v[i]),height:sy(0)-sy(d.v[i]),fill:d.c,rx:3},svg);
-   r.onmousemove=e=>tip(e,`<b>${d.n} · ${b[2]}</b><br>${d.k[i]} of ${d.tot} events (${Math.round(d.v[i])}%)`);r.onmouseleave=untip;
-   if(d.v[i]>=4)el("text",{x:x+w/2,y:sy(d.v[i])-4,"text-anchor":"middle","font-size":10,fill:"#5f6878"},svg).textContent=Math.round(d.v[i])+"%";});
-  el("text",{x:m.l+i*gw+gw/2,y:H-10,"text-anchor":"middle","font-size":11.5,fill:"#1d2330"},svg).textContent=b[2];});
- box.insertAdjacentHTML("beforeend",`<div class="legend">${data.map(d=>`<span><i style="background:${d.c}"></i>${d.n} (n=${d.tot})</span>`).join("")}</div>`);
+ const box=$("#lagHist");const B=[[0,14,"2 weeks or less"],[15,30,"2–4 weeks"],[31,60,"1–2 months"],[61,90,"2–3 months"],[91,180,"3–6 months"],[181,365,"6–12 months"],[366,1e9,"Over a year"]];
+ const grp=[["2012–2019",e=>e.year>=2012&&e.year<2020,"#c9dbf0"],["Since 2020",e=>e.year>=2020,"#2364f0"]];
+ const data=grp.map(([n,f,c])=>{const l=E.filter(e=>f(e)&&e.fda_lag!=null&&e.fda_lag>=0).map(e=>e.fda_lag);return {n,c,tot:l.length,k:B.map(b=>l.filter(x=>x>=b[0]&&x<=b[1]).length),v:B.map(b=>l.length?100*l.filter(x=>x>=b[0]&&x<=b[1]).length/l.length:0)};});
+ const W=Math.max(320,box.clientWidth||1100),H=250,m={l:38,r:6,t:20,b:30};const svg=svgIn(box,W,H);
+ const mx=Math.max(...data.flatMap(d=>d.v)),st=niceStep(mx),top=Math.ceil(mx/st)*st,gw=(W-m.l-m.r)/B.length,sy=v=>H-m.b-(H-m.t-m.b)*v/top;
+ for(let g=0;g<=top;g+=st){el("line",{x1:m.l,x2:W-m.r,y1:sy(g),y2:sy(g),stroke:"#e6ecf4","stroke-dasharray":g?"4 4":""},svg);txt(svg,m.l-8,sy(g)+4,g+"%",{"text-anchor":"end","font-size":11});}
+ B.forEach((b,i)=>{data.forEach((d,j)=>{const w=gw*.32,x=m.l+i*gw+gw*.16+j*(w+gw*.04);const r=el("rect",{x,width:w,y:sy(d.v[i]),height:sy(0)-sy(d.v[i]),fill:d.c,rx:Math.min(7,w/2.5)},svg);
+   r.onmousemove=e=>tip(e,`<b>${d.n} · ${b[2]}</b><br>${d.k[i]} of ${d.tot} recall events (${Math.round(d.v[i])}%)`);r.onmouseleave=untip;
+   if(d.v[i]>=3&&w>16)txt(svg,x+w/2,sy(d.v[i])-5,Math.round(d.v[i])+"%",{"text-anchor":"middle","font-size":10.5,fill:"#1d2433","font-weight":600});});
+  txt(svg,m.l+i*gw+gw/2,H-9,W<640?b[2].replace(" or less","").replace("months","mo").replace("weeks","wk"):b[2],{"text-anchor":"middle",fill:"#1d2433","font-size":W<640?10:11.5});});
+ box.insertAdjacentHTML("beforeend",`<div class="legend">${data.map(d=>`<span><i style="background:${d.c}"></i>${d.n} (${d.tot} recalls)</span>`).join("")}</div>`);
 }
-const TILE={AK:[0,0],ME:[11,0],VT:[10,1],NH:[11,1],WA:[1,2],ID:[2,2],MT:[3,2],ND:[4,2],MN:[5,2],IL:[6,2],WI:[7,2],MI:[8,2],NY:[9,2],RI:[10,2],MA:[11,2],OR:[1,3],NV:[2,3],WY:[3,3],SD:[4,3],IA:[5,3],IN:[6,3],OH:[7,3],PA:[8,3],NJ:[9,3],CT:[10,3],CA:[1,4],UT:[2,4],CO:[3,4],NE:[4,4],MO:[5,4],KY:[6,4],WV:[7,4],VA:[8,4],MD:[9,4],DE:[10,4],AZ:[2,5],NM:[3,5],KS:[4,5],AR:[5,5],TN:[6,5],NC:[7,5],SC:[8,5],DC:[9,5],OK:[4,6],LA:[5,6],MS:[6,6],AL:[7,6],GA:[8,6],HI:[0,7],TX:[4,7],FL:[9,7]};
-const STN={"Missouri":"MO","South Carolina":"SC","Nevada":"NV","Pennsylvania":"PA","Texas":"TX","New Jersey":"NJ","Washington":"WA","California":"CA","Ohio":"OH","Kansas":"KS","Minnesota":"MN"};
-function tilemap(){
- const box=$("#tilemap");box.innerHTML="";const cnt={};E.forEach(e=>{const s=STN[e.state]||e.state;if(TILE[s])(cnt[s]=cnt[s]||[]).push(e);});
- const mx=Math.max(...Object.values(cnt).map(a=>a.length));const W=box.clientWidth||520,cs=Math.min(44,(W-10)/12),H=cs*8+10;const svg=el("svg",{width:W,height:H},box);
- Object.entries(TILE).forEach(([s,[c,r]])=>{const ev=cnt[s]||[];const n=ev.length;const a=n?0.15+0.85*Math.sqrt(n/mx):0;
-  const g=el("g",{},svg);const rc=el("rect",{x:c*cs+2,y:r*cs+2,width:cs-4,height:cs-4,rx:6,fill:n?`rgba(10,92,138,${a})`:"#f1f3f6"},g);
-  el("text",{x:c*cs+cs/2,y:r*cs+cs/2-1,"text-anchor":"middle","font-size":10.5,"font-weight":700,fill:a>.55?"#fff":"#39404d"},g).textContent=s;
-  if(n)el("text",{x:c*cs+cs/2,y:r*cs+cs/2+11,"text-anchor":"middle","font-size":10,fill:a>.55?"#e0ecf5":"#5f6878"},g).textContent=n;
-  g.onmousemove=e=>{const hz={};ev.forEach(x=>hz[x.hazard]=(hz[x.hazard]||0)+1);tip(e,`<b>${s}</b>: ${n} recall events${n?"<br>"+Object.entries(hz).sort((a,b)=>b[1]-a[1]).slice(0,4).map(([h,k])=>`${esc(h)}: ${k}`).join("<br>"):""}`);};g.onmouseleave=untip;});
+
+// ================= Repeat recalls =================
+let REP_ALL=false;
+function repeats(){
+ const m={};E.forEach(e=>{const k=e.firm_n+"|"+e.hazard;(m[k]=m[k]||[]).push(e);});
+ const epi=v=>{const ds=v.map(e=>e.init).filter(Boolean).sort();let n=ds.length?1:0;for(let i=1;i<ds.length;i++)if((new Date(ds[i])-new Date(ds[i-1]))/864e5>90)n++;return n;};
+ return Object.entries(m).map(([k,v])=>{const [f,h]=k.split("|");const ys=v.map(e=>e.init).filter(Boolean).sort();return {f,h,v,ys,ep:epi(v)}}).filter(r=>r.ep>=2).sort((a,b)=>b.ep-a.ep||b.v.length-a.v.length||a.f.localeCompare(b.f));
 }
+const REP = repeats();
+function repeatChart(){
+ const rows=REP.filter(r=>r.ep>=(REP_ALL?2:3));
+ $("#repTog").textContent=REP_ALL?"Show 3 or more only":`Show all ${REP.length}`;
+ $("#repNote").textContent=`${rows.length} of ${REP.length} company and hazard pairs, with ${REP_ALL?"2":"3"} or more separate recalls (more than 90 days apart). Click a dot to see that recall.`;
+ const box=$("#repeatChart");const y0=Y0,y1=Y1+1;
+ const W=Math.max(680,box.clientWidth||1100),rowH=26,mm={l:Math.min(300,W*.34),r:16,t:22,b:4},H=mm.t+mm.b+rowH*rows.length;const svg=svgIn(box,W,H);
+ const sx=d=>{const t=new Date(d+"T00:00:00");return mm.l+(W-mm.l-mm.r)*((t.getFullYear()+t.getMonth()/12)-y0)/(y1-y0);};
+ for(let y=Math.ceil(y0/5)*5;y<=y1;y+=5){const x=sx(y+"-01-01");el("line",{x1:x,x2:x,y1:mm.t-6,y2:H,stroke:"#e6ecf4","stroke-dasharray":"4 4"},svg);txt(svg,x,12,y,{"text-anchor":"middle","font-size":11});}
+ rows.forEach((r,i)=>{const y=mm.t+i*rowH,cy=y+rowH/2,c=hcol(r.h);
+  if(i%2===0)el("rect",{x:4,y,width:W-8,height:rowH,rx:8,fill:"#f8fbfe"},svg);
+  txt(svg,mm.l-12,cy+4,`${r.f} · ${short(r.h)} (${r.ep})`,{"text-anchor":"end",fill:"#1d2433","font-size":12});
+  if(r.ys.length>1)el("line",{x1:sx(r.ys[0]),x2:sx(r.ys[r.ys.length-1]),y1:cy,y2:cy,stroke:c,"stroke-width":3,opacity:.3,"stroke-linecap":"round"},svg);
+  r.v.forEach(e=>{if(!e.init)return;const d=el("circle",{cx:sx(e.init),cy,r:6,fill:c,stroke:"#fff","stroke-width":2,style:"cursor:pointer"},svg);
+   d.onmousemove=ev=>tip(ev,`<b>${esc(r.f)}</b> · ${nice(e.init)}<br>${esc(e.hazard)} · ${esc(CAT_LABEL[e.category])} · ${e.n} product${e.n>1?"s":""}<br><span class="m">${esc(e.reason.slice(0,180))}</span>`);d.onmouseleave=untip;d.onclick=()=>{untip();openRecall(e.id);};});});
+}
+$("#repTog").onclick=()=>{REP_ALL=!REP_ALL;repeatChart();};
 function topFirms(){
- const f={};E.forEach(e=>(f[e.firm_n]=f[e.firm_n]||[]).push(e));const rows=Object.entries(f).sort((a,b)=>b[1].length-a[1].length).slice(0,14);
- const box=$("#topFirms");box.innerHTML="";const W=box.clientWidth||520,rowH=24,m={l:170,r:30,t:4,b:4},H=m.t+m.b+rowH*rows.length;const svg=el("svg",{width:W,height:H},box);const mx=rows[0][1].length;
- rows.forEach(([name,ev],i)=>{const y=m.t+i*rowH;let x=m.l;el("text",{x:m.l-8,y:y+rowH/2+4,"text-anchor":"end","font-size":12,fill:"#1d2330"},svg).textContent=name.length>24?name.slice(0,23)+"…":name;
-  const hz={};ev.forEach(e=>hz[e.hazard]=(hz[e.hazard]||0)+1);HZ.forEach(h=>{if(!hz[h])return;const w=(W-m.l-m.r)*hz[h]/mx;const b=el("rect",{x,y:y+4,width:Math.max(1,w-1),height:rowH-8,fill:COL[h],rx:2},svg);
-   b.onmousemove=e=>tip(e,`<b>${esc(name)}</b><br>${esc(h)}: ${hz[h]} of ${ev.length} events<br><span style="color:#9fb0c2">${ev.map(x=>x.year).filter(Boolean).sort().join(", ")}</span>`);b.onmouseleave=untip;b.onclick=()=>setFilters({q:name});x+=w;});
-  el("text",{x:x+5,y:y+rowH/2+4,"font-size":11,fill:"#5f6878"},svg).textContent=ev.length;});
+ const f={};E.forEach(e=>(f[e.firm_n]=f[e.firm_n]||[]).push(e));const rows=Object.entries(f).sort((a,b)=>b[1].length-a[1].length||a[0].localeCompare(b[0])).slice(0,12);
+ const box=$("#topFirms");const W=Math.max(300,box.clientWidth||900),rowH=28,lab=Math.min(220,W*.4),m={l:lab,r:40,t:2,b:2},H=m.t+m.b+rowH*rows.length;const svg=svgIn(box,W,H);const mx=rows[0][1].length;
+ rows.forEach(([name,ev],i)=>{const y=m.t+i*rowH,bh=14,iw=(W-m.l-m.r)*ev.length/mx;let x=m.l;
+  txt(svg,m.l-10,y+rowH/2+4,name.length>30?name.slice(0,29)+"…":name,{"text-anchor":"end",fill:"#1d2433","font-size":12.5});
+  const id="tf"+i,cp=el("clipPath",{id},svg);el("rect",{x:m.l,y:y+(rowH-bh)/2,width:iw,height:bh,rx:bh/2},cp);const g=el("g",{"clip-path":`url(#${id})`},svg);
+  GROUPS.forEach(gr=>{const n=ev.filter(e=>gr.hz.includes(e.hazard)).length;if(!n)return;const w=iw*n/ev.length;const b=el("rect",{x,y:y+(rowH-bh)/2,width:w,height:bh,fill:gr.c,stroke:"#fff","stroke-width":1.5,style:"cursor:pointer"},g);
+   b.onmousemove=e=>tip(e,`<b>${esc(name)}</b><br>${esc(gr.k)}: ${n} of ${ev.length} recall events<br><span class="m">${ev.map(x=>x.year).filter(Boolean).sort().join(", ")}</span>`);b.onmouseleave=untip;b.onclick=()=>{untip();goFilter({q:name});};x+=w;});
+  txt(svg,m.l+iw+8,y+rowH/2+4,ev.length,{fill:"#1d2433","font-weight":600,"font-size":12});});
+ box.insertAdjacentHTML("beforeend",`<div class="legend">${GROUPS.map(g=>`<span><i style="background:${g.c};${g.k==="Mold, objects, labels"?"box-shadow:inset 0 0 0 1px #c3cddc":""}"></i>${esc(g.k)}</span>`).join("")}</div>`);
 }
 
-
-function latest(){
- const asOf=new Date(META.data_through+"T00:00:00");const dAgo=d=>Math.round((asOf-new Date(d+"T00:00:00"))/864e5);
- const ev=E.filter(e=>e.init).sort((a,b)=>(b.init).localeCompare(a.init));
- const in90=ev.filter(e=>dAgo(e.init)<=90),in365=ev.filter(e=>dAgo(e.init)<=365);
- const prior=E.filter(e=>e.init&&dAgo(e.init)>365&&dAgo(e.init)<=730);
- const topH=a=>{const c={};a.forEach(e=>c[e.hazard]=(c[e.hazard]||0)+1);const t=Object.entries(c).sort((x,y)=>y[1]-x[1])[0];return t?`${t[0].split(" /")[0]} (${t[1]})`:"–";};
- const rawShare=a=>a.length?Math.round(100*a.filter(e=>e.category.startsWith("Raw")).length/a.length)+"%":"–";
- $("#newstats").innerHTML=[[in90.length,"recall events started in the last 90 days"],[in365.length,`in the last 12 months (vs ${prior.length} the year before)`],[topH(in365),"top hazard, last 12 months"],[rawShare(in365),"raw / frozen share, last 12 months"]].map(([b,s])=>`<div class="ns"><b>${b}</b><span>${s}</span></div>`).join("");
- $("#latestCards").innerHTML=ev.slice(0,6).map(e=>`<div class="lcard" data-id="${esc(e.id)}" style="border-top-color:${COL[e.hazard]}"><div class="d">Recall started ${e.init} · <span class="pill ${e.cls==="Class I"?"c1":e.cls==="Class II"?"c2":"c3"}">${esc(e.cls)}</span></div><div class="f">${esc(e.firm_n)}</div><div class="r"><b style="color:${COL[e.hazard]}">${esc(e.hazard)}</b> · ${esc(e.category)} · ${e.n} product${e.n>1?"s":""}</div><div class="r" style="color:#6b7280;margin-top:4px">${esc(e.reason.slice(0,140))}${e.reason.length>140?"…":""}</div></div>`).join("");
- document.querySelectorAll(".lcard").forEach(c=>c.onclick=()=>{setFilters({q:"",});sortK="init";sortD=-1;renderTable();setTimeout(()=>{const tr=document.querySelector(`#tbl tr.ev[data-id="${c.dataset.id}"]`);if(tr){tr.click();tr.scrollIntoView({block:"center"});}},400);});
-}
-
-// ---------- Explorer ----------
+// ================= All recalls =================
 const byEv={};R.forEach(r=>{(byEv[r.ev||r.rn]=byEv[r.ev||r.rn]||[]).push(r);});
 let sortK="init",sortD=-1;
-function opts(sel,label,vals){$(sel).innerHTML=`<option value="">${label}</option>`+vals.map(v=>`<option>${esc(v)}</option>`).join("");}
-opts("#fh","All hazards",HZ.filter(h=>E.some(e=>e.hazard===h)));opts("#fc","All formats",CATS);opts("#fs","All species",["Dog","Cat","Dog & cat","Mixed","Other","Unspecified"]);opts("#fk","All classes",["Class I","Class II","Class III"]);
+function opts(sel,label,vals,labels){$(sel).innerHTML=`<option value="">${label}</option>`+vals.map(v=>`<option value="${esc(v)}">${esc(labels?labels[v]:v)}</option>`).join("");}
+opts("#fh","All hazards",HZ.filter(h=>E.some(e=>e.hazard===h)));
+opts("#fc","All product types",CATS,CAT_LABEL);
+opts("#fs","All pets",["Dog","Cat","Dog & cat"]);
+opts("#fk","All classes",["Class I","Class II","Class III"]);
 opts("#fy","All years",[...new Set(years)].sort((a,b)=>b-a).map(String));
-function setFilters(f){$("#fq").value=f.q||"";$("#fh").value=f.h||"";$("#fc").value=f.c||"";$("#fs").value="";$("#fk").value="";$("#fy").value=f.y||"";renderTable();document.getElementById("explore").scrollIntoView({behavior:"smooth"});}
+function setFilters(f){$("#fq").value=f.q||"";$("#fh").value=f.h||"";$("#fc").value=f.c||"";$("#fs").value=f.s||"";$("#fk").value="";$("#fy").value=f.y||"";renderTable();}
+function goFilter(f){setFilters(f);if(location.hash!=="#all-recalls")location.hash="all-recalls";window.scrollTo({top:0});}
 function renderTable(){
  const q=$("#fq").value.toLowerCase().trim(),h=$("#fh").value,c=$("#fc").value,s=$("#fs").value,k=$("#fk").value,y=$("#fy").value;
- let rows=E.filter(e=>(!h||e.hazard===h)&&(!c||e.category===c)&&(!s||e.species===s)&&(!k||e.cls===k)&&(!y||String(e.year)===y));
+ let rows=E.filter(e=>(!h||e.hazard===h)&&(!c||e.category===c)&&(!s||e.species===s||(s!=="Dog & cat"&&e.species==="Dog & cat"))&&(!k||e.cls===k)&&(!y||String(e.year)===y));
  if(q)rows=rows.filter(e=>(e.firm_n+" "+e.firm+" "+e.reason+" "+(byEv[e.id]||[]).map(r=>r.desc).join(" ")).toLowerCase().includes(q));
  rows.sort((a,b)=>{const A=a[sortK]??"",B=b[sortK]??"";return (A>B?1:A<B?-1:0)*sortD;});
- $("#count").textContent=`${rows.length} recall events · ${fmt(rows.reduce((a,b)=>a+b.n,0))} products`;
- $("#tbl tbody").innerHTML=rows.map(e=>`<tr class="ev" data-id="${esc(e.id)}"><td>${e.init||"–"}</td><td><b>${esc(e.firm_n)}</b></td><td><span class="pill" style="background:${COL[e.hazard]}1f;color:${COL[e.hazard]}">${esc(e.hazard)}</span></td><td>${esc(e.category)}</td><td>${esc(e.species)}</td><td><span class="pill ${e.cls==="Class I"?"c1":e.cls==="Class II"?"c2":"c3"}">${esc(e.cls.replace("Class ",""))}</span></td><td>${e.n}</td><td>${e.fda_lag??"–"}</td></tr>`).join("");
- document.querySelectorAll("#tbl tr.ev").forEach(tr=>tr.onclick=()=>{const nx=tr.nextElementSibling;if(nx&&nx.classList.contains("detail")){nx.remove();return;}
-  const e=E.find(x=>x.id===tr.dataset.id);const ps=byEv[e.id]||[];
-  tr.insertAdjacentHTML("afterend",`<tr class="detail"><td colspan="8"><b>FDA reason:</b> ${esc(e.reason)}<br><b>Event ID:</b> ${esc(e.id)} · <b>Recall start:</b> ${e.init||"n/a"} · <b>FDA classified:</b> ${e.classified||"n/a"} · <b>Firm location:</b> ${esc(e.state)}<br><b>Products (${ps.length}):</b><ul style="margin:4px 0 0;padding-left:18px">${ps.slice(0,25).map(p=>`<li>${esc(p.desc)} <span style="color:#8a93a3">[${esc(p.rn)}]</span></li>`).join("")}${ps.length>25?`<li>…and ${ps.length-25} more</li>`:""}</ul></td></tr>`);});
+ $("#count").textContent=rows.length?`${fmt(rows.length)} recall event${rows.length===1?"":"s"} · ${fmt(rows.reduce((a,b)=>a+b.n,0))} products`:"";
+ document.querySelectorAll("#tbl th").forEach(th=>{th.querySelector(".ar")?.remove();if(th.dataset.k===sortK)th.insertAdjacentHTML("beforeend",` <span class="ar">${sortD>0?"↑":"↓"}</span>`);});
+ $("#tbl tbody").innerHTML=rows.length?rows.map(e=>`<tr class="ev" data-id="${esc(e.id)}" tabindex="0"><td style="white-space:nowrap">${e.init?nice(e.init):"–"}</td><td><b>${esc(e.firm_n)}</b></td><td><span class="hz ${e.hazard==="Salmonella"?"s":""}">${esc(short(e.hazard))}</span></td><td>${esc(CAT_LABEL[e.category])}</td><td>${esc(e.species)}</td><td><span class="cls ${clsClass(e.cls)}">${esc(e.cls)}</span></td><td class="n">${e.n}</td><td class="n">${e.fda_lag??"–"}</td></tr>`).join("")
+  :`<tr><td colspan="8"><div class="empty">No recalls match these filters. <a href="#" id="clearF">Clear filters</a></div></td></tr>`;
+ const cf=$("#clearF");if(cf)cf.onclick=ev=>{ev.preventDefault();setFilters({});};
+ document.querySelectorAll("#tbl tr.ev").forEach(tr=>{tr.onclick=()=>toggleRow(tr);tr.onkeydown=k=>{if(k.key==="Enter")toggleRow(tr);};});
+}
+function toggleRow(tr){
+ const nx=tr.nextElementSibling;if(nx&&nx.classList.contains("detail")){nx.remove();tr.classList.remove("open");return;}
+ const e=E.find(x=>x.id===tr.dataset.id);const ps=byEv[e.id]||[];tr.classList.add("open");
+ tr.insertAdjacentHTML("afterend",`<tr class="detail"><td colspan="8"><b>FDA's reason:</b> ${esc(e.reason)}<br><b>Recall started</b> ${nice(e.init)} · <b>FDA classified</b> ${nice(e.classified)} · <b>Company based in</b> ${esc(e.state||"n/a")} · <b>FDA event</b> ${esc(e.id)}<br><b>Products (${ps.length}):</b><ul>${ps.slice(0,25).map(p=>`<li>${esc(p.desc)} <span style="color:#5d6b86">[${esc(p.rn)}]</span></li>`).join("")}${ps.length>25?`<li>…and ${ps.length-25} more</li>`:""}</ul></td></tr>`);
 }
 ["#fq","#fh","#fc","#fs","#fk","#fy"].forEach(s=>$(s).addEventListener("input",renderTable));
 document.querySelectorAll("#tbl th").forEach(th=>th.onclick=()=>{const k=th.dataset.k;if(sortK===k)sortD*=-1;else{sortK=k;sortD=k==="init"||k==="n"||k==="fda_lag"?-1:1;}renderTable();});
-
-// ---------- findings text ----------
-function pct(a,b){return Math.round(100*a/b)+"%";}
-function writeFindings(recRows,ly,lh,rep){
- const S=E.filter(e=>e.hazard==="Salmonella");const eraN=[[2008,2012],[2013,2017],[2018,2022],[2023,2026]].map(p=>{const ev=E.filter(e=>e.year>=p[0]&&e.year<=p[1]);return Math.round(100*ev.filter(e=>e.hazard==="Salmonella").length/ev.length);});
- const Mel=E.filter(e=>e.hazard==="Melamine / cyanuric acid");const spe=a=>(a.reduce((s,e)=>s+e.n,0)/a.length).toFixed(1);
- $("#f-recur").innerHTML=`<p style="margin:0">Salmonella caused ${S.length} of ${E.length} recall events (${pct(S.length,E.length)}), and between ${Math.min(...eraN)}% and ${Math.max(...eraN)}% in every five-year period since 2008. Chemical hazards came in clusters: all ${Mel.length} melamine recalls were in 2007, aflatoxin recalls bunched up in 2011 and 2020, and 12 of 20 vitamin D recalls came between 2018 and 2021. A melamine recall covered ${spe(Mel)} products on average, compared with ${spe(S)} for Salmonella, because one contaminated ingredient went into many brands.</p>`;
- const L=E.filter(e=>e.hazard==="Listeria"),Lr=L.filter(e=>e.category.startsWith("Raw")).length;const A=E.filter(e=>e.hazard==="Aflatoxin / mycotoxin"),Ad=A.filter(e=>e.category==="Dry kibble").length;
- const V=E.filter(e=>e.hazard==="Vitamin D excess"),Vd=V.filter(e=>e.category==="Dry kibble").length;const rawNow=E.filter(e=>e.year>=2018),rawN=rawNow.filter(e=>e.category.startsWith("Raw")).length;
- const N=E.filter(e=>e.hazard==="Nutrient deficiency / excess"),Nc=N.filter(e=>e.species==="Cat").length,NT=N.filter(e=>/thiamine/i.test(e.reason)),Nt=NT.length,Ntc=NT.filter(e=>e.species==="Cat").length;
- $("#f-cluster").innerHTML=`<p style="margin:0">${Lr} of ${L.length} Listeria recalls were raw or frozen food, and ${Ad===A.length?"all "+A.length:Ad+" of "+A.length} aflatoxin recalls were dry kibble. Raw, frozen and freeze-dried food has been the most-recalled product type since 2018 (${pct(rawN,rawNow.length)} of events). ${Vd} of ${V.length} vitamin D recalls were dry food, and most of the rest were canned food and supplements. ${Nc} of ${N.length} vitamin and mineral recalls were cat food. ${Nt} were for low thiamine (vitamin B1), ${Ntc} of them in cat food. Cats need a lot of thiamine, and heat destroys it.</p>`;
- const pre=ly.filter(r=>r.y<2020).map(r=>r.v),post=ly.filter(r=>r.y>=2020).map(r=>r.v);
- const cs=CASES.filter(c=>c.lag_days!=null);const cm=median(cs.map(c=>c.lag_days));
- $("#f-time").innerHTML=`<p style="margin:0">Across the ${cs.length} outbreaks with documented dates, the median time from first warning sign to recall was ${fmt(Math.round(cm))} days. When the first sign was a positive lab test or an obvious poisoning, the recall followed within 1 to 34 days. When it was scattered complaints, it took from 181 days (Salmonella in people, linked to the food only later) to about 5.5 years (jerky treats from China, where the cause was never found). FDA's median time to classify a recall fell from about ${Math.round(median(pre))} days in 2012–2019 to about ${Math.round(median(post))} days since 2020.</p>`;
- const sRep=rep.filter(r=>r.h==="Salmonella").length;
- const tops=rep.slice(0,3).map(r=>`${esc(r.f)} (${r.ep})`);const topTxt=tops.length>1?tops.slice(0,-1).join(", ")+" and "+tops[tops.length-1]:tops[0];
- $("#f-repeat").innerHTML=`<p style="margin:0">${rep.length} companies recalled products for the same hazard again at least 90 days after an earlier recall. ${sRep} of those repeats were Salmonella, mostly at small raw food and treat makers. The most repeat episodes were at ${topTxt}.</p>`;
+function openRecall(id){
+ setFilters({});sortK="init";sortD=-1;renderTable();
+ if(location.hash!=="#all-recalls")location.hash="all-recalls";
+ setTimeout(()=>{const tr=document.querySelector(`#tbl tr.ev[data-id="${CSS.escape(id)}"]`);if(tr){toggleRow(tr);tr.scrollIntoView({block:"center"});}},0);
 }
+$("#searchBtn").onclick=()=>{if(location.hash!=="#all-recalls")location.hash="all-recalls";setTimeout(()=>$("#fq").focus(),0);};
 
-function takeaways(){
- $("#takeaways").innerHTML=`<ul class="take">
+// ================= Findings text =================
+function writeFindings(){
+ const S=E.filter(e=>e.hazard==="Salmonella");const eraN=[[2008,2012],[2013,2017],[2018,2022],[2023,Y1]].map(p=>{const ev=E.filter(e=>e.year>=p[0]&&e.year<=p[1]);return Math.round(100*ev.filter(e=>e.hazard==="Salmonella").length/ev.length);});
+ const Mel=E.filter(e=>e.hazard==="Melamine / cyanuric acid");const spe=a=>(a.reduce((s,e)=>s+e.n,0)/a.length).toFixed(1);
+ $("#f-recur").textContent=`Salmonella caused ${S.length} of ${E.length} recall events (${pct(S.length,E.length)}), and between ${Math.min(...eraN)}% and ${Math.max(...eraN)}% in every five-year period since 2008. Chemical hazards came in clusters: all ${Mel.length} melamine recalls were in 2007, aflatoxin recalls bunched up in 2011 and 2020, and 12 of 20 vitamin D recalls came between 2018 and 2021. A melamine recall covered ${spe(Mel)} products on average, compared with ${spe(S)} for Salmonella, because one contaminated ingredient went into many brands.`;
+ const L=E.filter(e=>e.hazard==="Listeria"),Lr=L.filter(e=>e.category.startsWith("Raw")).length;const A=E.filter(e=>e.hazard==="Aflatoxin / mycotoxin"),Ad=A.filter(e=>e.category==="Dry kibble").length;
+ const rawNow=E.filter(e=>e.year>=2018),rawN=rawNow.filter(e=>e.category.startsWith("Raw")).length;
+ const N=E.filter(e=>e.hazard==="Nutrient deficiency / excess"),Nc=N.filter(e=>e.species==="Cat").length,NT=N.filter(e=>/thiamine/i.test(e.reason)),Ntc=NT.filter(e=>e.species==="Cat").length;
+ $("#f-cluster").textContent=`${Lr} of ${L.length} Listeria recalls were raw or frozen food, and ${Ad===A.length?"all "+A.length:Ad+" of "+A.length} aflatoxin recalls were dry kibble. Raw, frozen and freeze-dried food has been the most-recalled product type since 2018 (${pct(rawN,rawNow.length)} of recall events). ${Nc} of ${N.length} vitamin and mineral recalls were cat food. ${NT.length} were for low thiamine (vitamin B1), ${Ntc} of them in cat food. Cats need a lot of thiamine, and heat destroys it.`;
+ const ly=lagRows(),pre=ly.filter(r=>r.y<2020).map(r=>r.v),post=ly.filter(r=>r.y>=2020).map(r=>r.v);const cs=CASES.filter(c=>c.lag_days!=null);
+ $("#f-time").textContent=`When the first sign was a positive lab test or an obvious poisoning, the recall followed within 1 to 34 days. When it was scattered complaints, it took from 181 days (Salmonella in people, linked to the food only later) to about 5.5 years (jerky treats from China, where the cause was never found). Across all ${cs.length} outbreaks the median was ${fmt(Math.round(median(cs.map(c=>c.lag_days))))} days. Separately, FDA's median time to classify a recall fell from about ${Math.round(median(pre))} days in 2012–2019 to about ${Math.round(median(post))} days since 2020.`;
+ const sRep=REP.filter(r=>r.h==="Salmonella").length;const tops=REP.slice(0,3).map(r=>`${r.f} (${r.ep})`);const topTxt=tops.length>1?tops.slice(0,-1).join(", ")+" and "+tops[tops.length-1]:tops[0];
+ $("#f-repeat").textContent=`${REP.length} companies recalled products for the same hazard again at least 90 days after an earlier recall. ${sRep} of those repeats were Salmonella, mostly at small raw food and treat makers. A second recall for the same hazard often means the first fix didn't reach the cause. The most repeat recalls were at ${topTxt}.`;
+}
+function about(){
+ $("#takeaways").innerHTML=`<ul>
  <li>Raw, freeze-dried and treat products have no cooking step, so Salmonella controls there need validation (high-pressure processing or a proven heat step) and test-and-hold on finished product before it ships.</li>
  <li>Melamine (in wheat gluten and rice protein), vitamin D (from one premix supplier) and aflatoxin (in corn) each reached many brands through a shared ingredient. Testing premixes for vitamin D and grain lots for mycotoxins when they arrive covers every product made from them.</li>
  <li>The slow cases on the timeline started as scattered complaints from owners and vets. Tracking symptoms like vomiting, kidney problems and signs of vitamin D toxicity by production lot would show a pattern sooner.</li>
  <li>Half of the vitamin and mineral recalls (9 of 18) were cat foods low in thiamine. Testing thiamine in finished cat food after cooking would catch this before release.</li>
  <li>Listeria and H5N1 recalls were almost all raw food, so raw lines are where new pathogen problems have shown up first.</li>
  </ul>`;
-}
-function methods(){
  $("#methods").innerHTML=`
  <p><b>Recall data.</b> FDA Enforcement Report, product type "Veterinary", through ${META.data_through_label}. <code>scripts/fetch_fda.py</code> downloads the report's public CSV export (no API key needed), and a GitHub Actions job reruns it with <code>scripts/pipeline.py</code> every Monday. FDA caps each export at 1,000 rows, so the script splits large date ranges. Records classified before June 2012 have no classification date, so the script finds them by searching product descriptions for pet keywords. After removing duplicates there are ${fmt(META.vet_total)} veterinary records, ${fmt(R.length)} of which are pet food, treats or supplements, grouped into ${fmt(E.length)} recall events by FDA event ID.</p>
- <p><b>Filtering and labels.</b> I kept records that mention dogs, cats, pets, puppies, kittens, treats or chews, and dropped animal drugs, vet devices and livestock feed. Hazard labels come from keyword rules on FDA's "reason for recall" text (for example, "salmonell" means Salmonella). Product type and species come from the product description. Each event gets the most common label among its products. The rules are in <code>scripts/classify.py</code>. They miss some cases, so check the records before quoting an exact count.</p>
- <p><b>Why not openFDA adverse event reports.</b> openFDA's <code>animalandveterinary/event</code> endpoint (${META.ade_total}) only covers animal drugs, and brand names are hidden. Pet food complaints go to FDA's Safety Reporting Portal, which isn't published in bulk. openFDA's <code>food/enforcement</code> endpoint skips the Veterinary product type, so only about ${META.openfda_pet} pet recalls appear there. That's why chart (a) in section 3 uses outbreak dates from FDA and CDC documents.</p>
- <p><b>Lag definitions.</b> FDA classification lag is the Center Classification Date minus the Recall Initiation Date, using the earliest dates in each event. First sign to recall is the earliest documented complaint, illness report or positive test in FDA or CDC records, minus the date of the first recall.</p>
+ <p><b>Filtering and labels.</b> I kept records that mention dogs, cats, pets, puppies, kittens, treats or chews, and dropped animal drugs, vet devices and livestock feed. Hazard labels come from keyword rules on FDA's "reason for recall" text (for example, "salmonell" means Salmonella). Product type and pet come from the product description. Each event gets the most common label among its products. The rules are in <code>scripts/classify.py</code>. They miss some cases, so check the records before quoting an exact count.</p>
+ <p><b>Why not openFDA adverse event reports.</b> openFDA's <code>animalandveterinary/event</code> endpoint (${META.ade_total}) only covers animal drugs, and brand names are hidden. Pet food complaints go to FDA's Safety Reporting Portal, which isn't published in bulk. openFDA's <code>food/enforcement</code> endpoint skips the Veterinary product type, so only about ${META.openfda_pet} pet recalls appear there. That's why the outbreak timeline uses dates from FDA and CDC documents.</p>
+ <p><b>How time is measured.</b> Days to classify is the Center Classification Date minus the Recall Initiation Date, using the earliest dates in each event. First warning sign to recall is the earliest documented complaint, illness report or positive test in FDA or CDC records, up to the date of the first recall.</p>
  <p><b>Limits.</b> Recall counts measure what got caught, not how often contamination happens. FDA's targeted sampling of raw pet food in the 2010s, for example, raised raw food recall counts. Market withdrawals and recalls outside the US aren't included.</p>`;
- $("#foot").innerHTML=`Built by Alana Kwan. Data from the U.S. FDA Enforcement Report, FDA CVM and CDC. Not affiliated with FDA or any pet food company. Check FDA's records before relying on a single number.`;
+ $("#foot").innerHTML=`Built by Alana Kwan. Data from the U.S. FDA Enforcement Report, FDA CVM and CDC. Not affiliated with FDA or any pet food company. Check FDA's records before relying on a single number. <a href="https://github.com/akwnn/pet-food-safety">Code and data on GitHub</a>`;
 }
 
-latest();spark();drawChips();drawYears();bubble();salShare();const rec=recurTable();speciesChart();severity();lagHist();tilemap();topFirms();heat();catShift();drawCases();const ly=lagYear();const lh=lagHaz();const rep=repeatChart();renderTable();writeFindings(rec,ly,lh,rep);takeaways();methods();
-let rT;addEventListener("resize",()=>{clearTimeout(rT);rT=setTimeout(()=>{drawYears();drawCases();lagYear();lagHaz();repeatChart();$("#catShift").innerHTML="";catShift();spark();bubble();salShare();speciesChart();severity();lagHist();tilemap();topFirms();},200);});
+// ================= Tabs =================
+// Charts measure their box, so each tab draws when it's shown and again on resize.
+const DRAW={
+ "overview":overview,
+ "hazards":()=>{hzYears();salShare();perEvent();},
+ "product-types":()=>{$("#catShift").innerHTML="";catShift();speciesChart();severity();},
+ "time-to-recall":()=>{drawCases();lagYear();lagHaz();lagHist();},
+ "repeat-recalls":()=>{repeatChart();topFirms();},
+ "all-recalls":()=>{},
+ "about":()=>{}
+};
+let current=null;
+function show(){
+ const t=(location.hash||"#overview").slice(1);const tab=DRAW[t]?t:"overview";
+ document.querySelectorAll("section.tab").forEach(s=>s.classList.toggle("on",s.id==="tab-"+tab));
+ document.querySelectorAll("#nav a").forEach(a=>{const on=a.getAttribute("href")==="#"+tab;a.classList.toggle("on",on);if(on){a.setAttribute("aria-current","page");a.scrollIntoView({block:"nearest",inline:"nearest"});}else a.removeAttribute("aria-current");});
+ untip();
+ if(current!==tab){current=tab;DRAW[tab]();if(tab!=="all-recalls")window.scrollTo({top:0});}
+}
+addEventListener("hashchange",show);
+let lastW=innerWidth,rT;addEventListener("resize",()=>{clearTimeout(rT);rT=setTimeout(()=>{if(innerWidth===lastW)return;lastW=innerWidth;DRAW[current]&&DRAW[current]();},150);});
+
+hzChips();recurTable();heat();renderTable();writeFindings();about();show();
 </script>
 </body>
 </html>
