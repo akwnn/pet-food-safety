@@ -328,4 +328,5 @@ id,init,classified,fda_lag,close_days,year,firm,firm_n,hazard,category,species,c
 99714,2026-08-20,2026-09-22,33,47,2026,A Place for Paws LLC,A Place For Paws,Salmonella,Treats & chews,Dog,Class I,1,OH,Product may be contaminated with Salmonella
 99719,2026-08-21,2026-09-03,13,,2026,"Fromm Family Foods, LLC",Fromm Family Foods,Foreign material,Wet / canned,Dog,Class I,2,WI,Potential foreign material (metal) contamination.
 99743,2026-08-21,2026-09-24,34,,2026,Revival Animal Health LLC,Revival Animal Health,Nutrient deficiency / excess,Dry kibble,Cat,Class I,1,IA,"Product may contain low levels of potassium, copper, folic acid, choline and/or pyridoxine (vitamin B6)."
+99632,2026-08-25,2026-10-20,56,,2026,Barking Labs Corp,Barking Labs,Salmonella,Supplements,Dog,Class I,2,NY,Possible Salmonella contamination.
 99786,2026-08-28,2026-09-22,25,,2026,Morasch Meats Inc,Morasch Meats,Salmonella,Raw / frozen / freeze-dried,Dog & cat,Class I,2,OR,Product may be contaminated with Salmonella
