@@ -316,7 +316,7 @@ id,init,classified,fda_lag,close_days,year,firm,firm_n,hazard,category,species,c
 98465,2026-02-18,2026-04-09,50,,2026,"Pretty Bird International, Inc",Pretty Bird International,Salmonella,Dry kibble,Dog,Class I,1,MN,Dog food tested presumptive Salmonella positive.
 98474,2026-02-19,2026-03-19,28,55,2026,elite treats LLC,Elite Treats,Salmonella,Treats & chews,Dog,Class I,1,FL,Potential contamination with Salmonella
 98645,2026-03-25,2026-04-09,15,156,2026,Farmina Pet Food USA  LLC,Farmina Pet Food,Labeling / undeclared / unapproved,Dry kibble,Dog,Class III,1,NC,Mislabeled Dog Food. The ingredient panel on the back list lamb while the front panel of the product list salmon.
-98774,2026-04-15,2026-05-26,41,,2026,Revival Animal Health LLC,Revival Animal Health,Vitamin D excess,Supplements,Dog,Class I,2,IA,Milk Replacer may contain vitamin D levels higher or lower than labeled claim.
+98774,2026-04-15,2026-05-26,41,196,2026,Revival Animal Health LLC,Revival Animal Health,Vitamin D excess,Supplements,Dog,Class I,2,IA,Milk Replacer may contain vitamin D levels higher or lower than labeled claim.
 98912,2026-05-01,2026-06-12,42,126,2026,Hoosier Processing LLC,Hoosier Processing,Salmonella,Raw / frozen / freeze-dried,Dog,Class I,1,IN,Potential Salmonella contamination
 98950,2026-05-11,2026-05-27,16,116,2026,Allprovide Pet Foods LLC,Allprovide Pet Foods,Foreign material,Raw / frozen / freeze-dried,Dog,Class II,1,GA,Potential foreign material (plastic) contamination.
 98983,2026-05-13,2026-06-12,30,68,2026,Montgomery Meats,Montgomery Meats,Listeria,Raw / frozen / freeze-dried,Unspecified,Class I,3,IN,Potential Listeria monocytogenes contamination
