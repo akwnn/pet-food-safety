@@ -330,3 +330,4 @@ id,init,classified,fda_lag,close_days,year,firm,firm_n,hazard,category,species,c
 99743,2026-08-21,2026-09-24,34,76,2026,Revival Animal Health LLC,Revival Animal Health,Nutrient deficiency / excess,Supplements,Cat,Class I,1,IA,"Product may contain low levels of potassium, copper, folic acid, choline and/or pyridoxine (vitamin B6)."
 99632,2026-08-25,2026-10-20,56,,2026,Barking Labs Corp,Barking Labs,Salmonella,Supplements,Dog,Class I,2,NY,Possible Salmonella contamination.
 99786,2026-08-28,2026-09-22,25,,2026,Morasch Meats Inc,Morasch Meats,Salmonella,Raw / frozen / freeze-dried,Dog & cat,Class I,2,OR,Product may be contaminated with Salmonella
+100228,2026-10-27,2026-11-20,24,,2026,"Raaw Energy, LLC",Raaw Energy,Listeria,Raw / frozen / freeze-dried,Dog,Class I,4,NJ,Potential Listeria monocytogenes contamination

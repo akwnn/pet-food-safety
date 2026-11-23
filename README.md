@@ -12,14 +12,14 @@ The dashboard covers every dog food, cat food, pet treat and pet supplement reca
 <!-- STATS:START -->
 | | |
 |---|---|
-| Data through | Nov 13, 2026 (updates every Monday) |
-| Pet food recall events | 331 (2003–2026) |
-| Recalled products (SKUs) | 1,914 |
+| Data through | Nov 20, 2026 (updates every Monday) |
+| Pet food recall events | 332 (2003–2026) |
+| Recalled products (SKUs) | 1,918 |
 | Salmonella share of events | 50% |
 | Class I (most serious) share | 71% |
 | Median days, recall start → FDA classification | 73 |
-| Recall events in the last 12 months | 22 |
-| Most recent recall event | 2026-08-28: Morasch Meats (Salmonella) |
+| Recall events in the last 12 months | 23 |
+| Most recent recall event | 2026-10-27: Raaw Energy (Listeria) |
 <!-- STATS:END -->
 
 ## What I found (September 2026)
